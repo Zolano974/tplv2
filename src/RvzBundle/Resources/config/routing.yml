@@ -1,0 +1,33 @@
+rvz_homepage:
+    path:     /
+    defaults: { _controller: RvzBundle:Default:index }
+
+# Routes dédiées aux worksets
+
+rvz_workset:
+    path:     /worksets
+    defaults: { _controller: RvzBundle:Workset:index }
+    
+rvz_create_workset:
+    path:     /workset/create
+    defaults: { _controller: RvzBundle:Workset:create }
+    
+rvz_edit_workset:
+    path:     /workset/edit/{id}
+    defaults: { _controller: RvzBundle:Workset:edit }
+    requirements:
+        id:    \d
+    
+rvz_delete_workset:
+    path:     /workset/delete/{id}
+    defaults: { _controller: RvzBundle:Workset:delete }
+    requirements:
+        id:    \d
+    
+rvz_view_workset:
+    path:     /workset/view/{id}
+    defaults: { _controller: RvzBundle:Workset:view }
+    requirements:
+        id:    \d
+    
+

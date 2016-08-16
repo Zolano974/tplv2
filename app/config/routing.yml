@@ -1,0 +1,11 @@
+rvz:
+    resource: "@RvzBundle/Resources/config/routing.yml"
+    prefix:   /rvz
+
+first:
+    resource: "@FirstBundle/Resources/config/routing.yml"
+    prefix:   /first
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation

@@ -1,0 +1,11 @@
+first_homepage:
+    path:     /
+    defaults: { _controller: FirstBundle:Default:index }
+    
+first_say:
+    path:     /say/{thing}
+    defaults: { _controller: FirstBundle:Default:say,thing: anything }
+    
+test_workset:
+    path:     /workset/test
+    defaults: { _controller: FirstBundle:Workset:index }

@@ -1,0 +1,8 @@
+{
+    "name": "sytest",
+    "dependencies": {
+        "jquery": "latest",
+        "bootstrap": "latest",
+        "amcharts": "latest"
+    }
+}

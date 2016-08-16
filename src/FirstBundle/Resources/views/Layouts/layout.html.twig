@@ -1,0 +1,66 @@
+{# src/FirstBundle/Resources/views/layout.html.twig #}
+
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-param" content="_csrf">
+        <meta name="csrf-token" content="WGVTM0NmbDk9MmJkJD8bUxBUZEo1FAB4bis0dSg5B0sgUCBlcD9YSQ==">
+        <title>
+            {% block title %} Default Title{% endblock %}
+        </title>
+        
+        {# Bootstrap #}
+        
+            <link rel="stylesheet" href="{{ asset('bundles/first/lib/bootstrap/dist/css/bootstrap.min.css') }}" type="text/css" />
+            <link rel="stylesheet" href="{{ asset('bundles/first/lib/bootstrap/dist/css/bootstrap-theme.min.css') }}" type="text/css" />
+            
+            <script type="text/javascript" src="{{ asset('bundles/first/lib/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+            
+            {# 
+            
+            {% stylesheets '@FirstBundle/Resources/public/lib/bootstrap/dist/css/bootstrap.min.css' %}
+                <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+            {% endstylesheets %}
+
+            {% stylesheets '@FirstBundle/Resources/public/lib/bootstrap/dist/css/bootstrap-theme.min.css' %}
+                <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+            {% endstylesheets %}
+
+            {% javascripts '@FirstBundle/Resources/public/lib/bootstrap/dist/js/bootstrap.min.js' %}
+              <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}  
+            
+            #}
+    </head>
+    <body>
+
+
+        <div class="wrap">
+
+            {% include "FirstBundle:Layouts:menubar.html.twig" %}
+            
+            {# {% render "FirstBundle:Default:menu" %}   Ici au lieu d'inclure un template on inclut une actiond'un contrôleur (Default:menuAction()) cf lien ci-dessous pour détail #} 
+            
+            {# https://zestedesavoir.com/tutoriels/620/developpez-votre-site-web-avec-le-framework-symfony2/394_les-bases-de-symfony2/1993_le-moteur-de-templates-twig/#4-6365_heriter-et-inclure-des-templates #}
+            
+
+            <div class="container">
+
+                {%block content %}
+
+                {% endblock %}
+
+            </div>
+                
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p class="pull-left">&copy; Tourplanner V2</p>
+            </div>
+        </footer>
+
+    </body>
+</html>

@@ -1,0 +1,28 @@
+{# empty Twig template #}
+
+{% extends "FirstBundle:Layouts:layout.html.twig" %}
+
+{% block title %}
+    Test Workset
+    
+{% endblock  %}
+
+{% block content %}
+
+    <h2>
+
+        Test Workset
+    </h2>
+
+    <p>
+        <ul>
+            {% for workset in worksets %}
+                <li>
+                    <b>{{ workset.id }} - {{ workset.name }} - {{ workset.generic }}</b> :  {{ workset.description }}
+                </li>
+            {% else %}
+            {% endfor %}
+        </ul>
+    </p>
+    
+{% endblock  %}

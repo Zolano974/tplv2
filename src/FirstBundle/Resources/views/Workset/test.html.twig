@@ -9,20 +9,75 @@
 
 {% block content %}
 
-    <h2>
+    <div class="row">
+        
+        <div class="col-md-12">
+            <h2>
 
-        Test Workset
-    </h2>
+                Test Workset
+            </h2>
+        </div>
 
-    <p>
-        <ul>
-            {% for workset in worksets %}
-                <li>
-                    <b>{{ workset.id }} - {{ workset.name }} - {{ workset.generic }}</b> :  {{ workset.description }}
-                </li>
-            {% else %}
-            {% endfor %}
-        </ul>
-    </p>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            
+            <div class="table-responsive table">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Generic</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                        
+                    <tbody>
+                    {% for workset in worksets %}
+                        <tr>
+                            <td class="col-md-1">
+                                {{ workset.id }} - 
+                            </td>     
+                            <td class="col-md-3">
+                                <b>{{ workset.name }} </b>
+                            </td>
+                            <td class="col-md-1">
+                                {% if workset.generic == 1 %}
+                                    Oui
+                                {% else %}
+                                    Non
+                                {% endif %}
+                            </td>
+                            <td class="col-md-5">
+                                {{ workset.description }}
+                            </td>
+                            <td>
+                                <a href="{{ path('edit_workset', {'id': workset.id }) }}">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                                <a href="{{ path('delete_workset', {'id': workset.id }) }}">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </td>
+
+               
+                          
+                                         
+              
+                        </tr>
+                    {% else %}
+                    {% endfor %}
+                    </tbody>
+                
+                </table>
+            </div>
+
+                
+            
+        </div>
+    </div>
+    
     
 {% endblock  %}

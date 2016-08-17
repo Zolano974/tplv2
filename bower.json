@@ -3,6 +3,8 @@
     "dependencies": {
         "jquery": "latest",
         "bootstrap": "latest",
-        "amcharts": "latest"
+        "amcharts": "latest",
+        "datatables.net": "latest",
+        "datatables.net-bs": "latest"
     }
 }

@@ -18,7 +18,7 @@ class WorksetController extends Controller
         
         $worksets=$worksetDAO->findAll();
         
-        var_dump($worksets);
+//        var_dump($worksets);
         
         // replace this example code with whatever you need
         return $this->render('FirstBundle:Workset:test.html.twig', array(

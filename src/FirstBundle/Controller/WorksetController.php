@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use FirstBundle\Repository\WorksetRepository;
 use FirstBundle\Entity\Workset;
+use FirstBundle\Form\WorksetType;
 
 use \Symfony\Component\Translation\Exception\NotFoundResourceException;
 
@@ -32,26 +33,82 @@ class WorksetController extends Controller
     
     public function createAction()
     {
-        //on récupère le EntityManager
-        $em = $this->getDoctrine()->getManager();
         
         //on créer un Workset et on lui donne des valeurs en dur pour l'instant
         $workset = new Workset();
+
+        $form = $this->createForm(new WorksetType(), $workset);
         
-        $workset->setName('Workset en Dur');
-        $workset->setGeneric(0);
-        $workset->setDescription('En Dur pour faire des Tests sans formulaire');
+        $request = $this->getRequest();
         
-        //on persiste le workset
-        $em->persist($workset);
+        //si le formulaire a été soumis
+        if($request->getMethod() == 'POST'){
+            
+            $form->bind($request);
+            
+            if($form->isValid()){
+                
+                //on récupère le EntityManager
+                $em = $this->getDoctrine()->getManager();   
+                
+                //on persiste le workset
+                $em->persist($workset);    
+                
+                //on valide les transactions
+                $em->flush();  
+                
+                //onrenvoie vers la liste
+                $url = $this->generateUrl('list_workset');
+                return $this->redirect($url);                
+            }
+        }
         
-        //on valide les transactions
-        $em->flush();
-        
-        $url = $this->generateUrl('list_workset');
-        
-        return $this->redirect($url);
+        return $this->render('FirstBundle:Workset:create.html.twig',array(
+            'action'    => 'create',
+            'form'      => $form->createView(),
+        ));
  
+    }
+    
+    public function editAction($id){
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $worksetDAO = $em->getRepository('FirstBundle:Workset');
+        
+        $workset = $worksetDAO->find($id);
+        
+        $form = $this->createForm(new WorksetType(), $workset);
+        
+        $request = $this->getRequest();     
+        
+        if($request->getMethod() == 'POST'){
+            
+            $form->bind($request);
+            
+            if($form->isValid()){
+                
+                //on récupère le EntityManager
+                $em = $this->getDoctrine()->getManager();   
+                
+                //on persiste le workset
+                $em->persist($workset);    
+                
+                //on valide les transactions
+                $em->flush();  
+                
+                //onrenvoie vers la liste
+                $url = $this->generateUrl('list_workset');
+                return $this->redirect($url);                
+            }
+        }
+        
+        return $this->render('FirstBundle:Workset:create.html.twig',array(
+            'action'    => 'edit',
+            'form'      => $form->createView(),
+        ));
+               
+        
     }
     
     public function deleteAction($id){
@@ -64,7 +121,7 @@ class WorksetController extends Controller
             
             $id = $this->getRequest()->request->get('delete_id');
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $worksetDAO = $em->getRepository('FirstBundle:Workset');
 

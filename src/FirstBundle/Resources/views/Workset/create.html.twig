@@ -1,0 +1,80 @@
+{# Workset/Create #}
+
+{% extends "FirstBundle:Layouts:layout.html.twig" %}
+
+{% block title %}
+    
+    {% if action == 'create'%}
+        Create Workset
+    {% else %}
+        Edit Workset
+    {% endif %}
+    
+    
+{% endblock  %}
+
+{% block content %}
+
+    <div class="row">
+        
+        <div class="col-md-12">
+            <h2>
+                {% if action == 'create'%}
+                    Create Workset
+                {% else %}
+                    Edit Workset
+                {% endif %}
+    
+            </h2>
+        </div>
+
+    </div>
+    <div class="row">
+        
+        <div class="col-md-12">
+            <form method="POST" {{ form_enctype(form) }}>
+                <div class="row">
+                    
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            {{ form_label(form.name, "Nom du Workset") }}
+                            {{ form_errors(form.name)}}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_widget(form.name)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            {{ form_label(form.description, "Description du Workset") }}
+                            {{ form_errors(form.description)}}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_widget(form.description)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            {{ form_label(form.generic, "Générique ?") }}
+                            {{ form_errors(form.generic)}}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_widget(form.generic)}}
+                        </div>
+                    </div>
+                </div>
+                        
+                {{ form_rest(form) }}                        
+
+                <input type="submit" class="btn btn-custom">
+           </form>
+        </div>
+
+    </div>
+
+{% endblock  %}
+

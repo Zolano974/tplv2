@@ -38,7 +38,7 @@ class Workset
     /**
      * @var int
      *
-     * @ORM\Column(name="generic", type="integer")
+     * @ORM\Column(name="generic", type="boolean")
      */
     private $generic;
 

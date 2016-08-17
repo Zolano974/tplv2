@@ -63,7 +63,7 @@ class WorksetController extends Controller
             }
         }
         
-        return $this->render('FirstBundle:Workset:create.html.twig',array(
+        return $this->render('FirstBundle:Workset:create-edit.html.twig',array(
             'action'    => 'create',
             'form'      => $form->createView(),
         ));
@@ -103,7 +103,7 @@ class WorksetController extends Controller
             }
         }
         
-        return $this->render('FirstBundle:Workset:create.html.twig',array(
+        return $this->render('FirstBundle:Workset:create-edit.html.twig',array(
             'action'    => 'edit',
             'form'      => $form->createView(),
         ));

@@ -1,7 +1,25 @@
+
+/* Classes générales */
+
 .content{
     margin-top: 5%;
 }
 
-a .glyphicon{
+.list .glyphicon{
     color: #333;
+}
+
+.btn-custom{
+    width: 80px;
+    border-radius: 0px !important;
+    background-color: #000;
+    color: #FFF;
+    
+}
+
+.btn-custom:hover{
+    border-radius: 0px !important;
+    background-color: white;
+    color: #222;
+    border:1px solid #222;
 }

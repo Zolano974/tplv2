@@ -31,6 +31,21 @@ class FieldController extends Controller
 
     }
     
+    
+    public function viewAction($id){
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $fieldDAO = $em->getRepository('FirstBundle:Field');
+        
+        $field = $fieldDAO->find($id);
+        
+        return $this->render('FirstBundle:Field:view.html.twig', array(
+            'field'  => $field,
+        ));        
+                
+    }    
+    
     public function createAction()
     {
         

@@ -54,6 +54,9 @@
                                 {{ workset.description }}
                             </td>
                             <td>
+                                <a href="{{ path('view_workset', {'id': workset.id }) }}">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
                                 <a href="{{ path('edit_workset', {'id': workset.id }) }}">
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </a>

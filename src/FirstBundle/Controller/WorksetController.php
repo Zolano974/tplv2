@@ -5,7 +5,6 @@ namespace FirstBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-use FirstBundle\Repository\WorksetRepository;
 use FirstBundle\Entity\Workset;
 use FirstBundle\Form\WorksetType;
 
@@ -31,6 +30,26 @@ class WorksetController extends Controller
             'worksets'  => $worksets,
         ));        
 
+    }
+    
+    public function viewAction($id){
+        
+        $workset = $this ->getDoctrine()
+                    ->getManager()
+                    ->getRepository('FirstBundle:Workset')
+                    ->find($id);
+        
+//        var_dump($workset);
+                    
+        
+//        $worksetDAO = $em->getRepository('FirstBundle:Workset');
+//        
+//        $workset = $worksetDAO->getOneWithFields($id);
+        
+        return $this->render('FirstBundle:Workset:view.html.twig', array(
+            'workset'  => $workset,
+        ));        
+                
     }
     
     public function createAction()
@@ -143,4 +162,5 @@ class WorksetController extends Controller
         ));        
         
     }
+    
 }

@@ -50,6 +50,9 @@
                                 <div class="color-square" style="background-color: {{ field.color }}"></div>
                             </td>
                             <td>
+                                <a href="{{ path('view_field', {'id': field.id }) }}">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
                                 <a href="{{ path('edit_field', {'id': field.id }) }}">
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </a>

@@ -13,7 +13,12 @@ use Doctrine\ORM\EntityRepository;
 class WorksetRepository extends EntityRepository
 {
     
-    public function fetchAll(){
+    public function fetchOnWithFields(){
 
+//        $qb = $this ->createQueryBuilder('w')
+//                    ->leftJoin('w.fields', 'f')
+//                    ->addSelect('f');
+//        
+//        return $qb->getQuery()->getResult();
     }
 }

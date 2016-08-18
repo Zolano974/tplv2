@@ -13,6 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Workset
 {
     /**
+     * @ORM\OneToMany(targetEntity="FirstBundle\Entity\Field", mappedBy="workset")
+     */    
+    private $fields;
+    
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")

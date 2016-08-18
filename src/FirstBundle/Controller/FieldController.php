@@ -20,12 +20,12 @@ class FieldController extends Controller
         
         $fieldDAO = $em->getRepository('FirstBundle:Field');
         
-        $fields=$fieldDAO->findAll();
+        $fields = $fieldDAO->findAll();
         
 //        var_dump($fields);
         
         // replace this example code with whatever you need
-        return $this->render('FirstBundle:Field:test.html.twig', array(
+        return $this->render('FirstBundle:Field:index.html.twig', array(
             'fields'  => $fields,
         ));        
 
@@ -35,9 +35,9 @@ class FieldController extends Controller
     {
         
         //on créer un Workset et on lui donne des valeurs en dur pour l'instant
-        $workset = new Workset();
+        $field = new Field();
 
-        $form = $this->createForm(new WorksetType(), $workset);
+        $form = $this->createForm(new FieldType(), $field);
         
         $request = $this->getRequest();
         
@@ -51,19 +51,19 @@ class FieldController extends Controller
                 //on récupère le EntityManager
                 $em = $this->getDoctrine()->getManager();   
                 
-                //on persiste le workset
-                $em->persist($workset);    
+                //on persiste le field
+                $em->persist($field);    
                 
                 //on valide les transactions
                 $em->flush();  
                 
                 //onrenvoie vers la liste
-                $url = $this->generateUrl('list_workset');
+                $url = $this->generateUrl('list_field');
                 return $this->redirect($url);                
             }
         }
         
-        return $this->render('FirstBundle:Workset:create-edit.html.twig',array(
+        return $this->render('FirstBundle:Field:create-edit.html.twig',array(
             'action'    => 'create',
             'form'      => $form->createView(),
         ));
@@ -74,36 +74,38 @@ class FieldController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
-        $worksetDAO = $em->getRepository('FirstBundle:Workset');
+        $fieldDAO = $em->getRepository('FirstBundle:Field');
         
-        $workset = $worksetDAO->find($id);
+        $field = $fieldDAO->find($id);
         
-        $form = $this->createForm(new WorksetType(), $workset);
+        $form = $this->createForm(new FieldType(), $field);
         
         $request = $this->getRequest();     
         
+        //si le form a été soumis
         if($request->getMethod() == 'POST'){
             
             $form->bind($request);
             
+            //si il est valide
             if($form->isValid()){
                 
                 //on récupère le EntityManager
                 $em = $this->getDoctrine()->getManager();   
                 
-                //on persiste le workset
-                $em->persist($workset);    
+                //on persiste le field
+                $em->persist($field);    
                 
                 //on valide les transactions
                 $em->flush();  
                 
                 //onrenvoie vers la liste
-                $url = $this->generateUrl('list_workset');
+                $url = $this->generateUrl('list_field');
                 return $this->redirect($url);                
             }
         }
         
-        return $this->render('FirstBundle:Workset:create-edit.html.twig',array(
+        return $this->render('FirstBundle:Field:create-edit.html.twig',array(
             'action'    => 'edit',
             'form'      => $form->createView(),
         ));
@@ -117,26 +119,27 @@ class FieldController extends Controller
             throw new NotFoundResourceException();
         }        
         
+        //si le form a été soumis
         if($this->getRequest()->getMethod() == 'POST'){
             
             $id = $this->getRequest()->request->get('delete_id');
 
             $em = $this->getDoctrine()->getManager();
 
-            $worksetDAO = $em->getRepository('FirstBundle:Workset');
+            $fieldDAO = $em->getRepository('FirstBundle:Field');
 
-            $workset = $worksetDAO->find($id);
+            $field = $fieldDAO->find($id);
 
-            $em->remove($workset);
+            $em->remove($field);
 
             $em->flush();
 
-            $url = $this->generateUrl('list_workset');
+            $url = $this->generateUrl('list_field');
 
             return $this->redirect($url);                 
         }
         
-        return $this->render('FirstBundle:Workset:delete.html.twig', array(
+        return $this->render('FirstBundle:Field:delete.html.twig', array(
             'id'    => $id,
         ));        
         

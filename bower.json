@@ -2,9 +2,11 @@
     "name": "sytest",
     "dependencies": {
         "jquery": "latest",
+        "jquery-ui": "latest",
         "bootstrap": "latest",
         "amcharts": "latest",
         "datatables.net": "latest",
-        "datatables.net-bs": "latest"
+        "datatables.net-bs": "latest",
+        "fartbastic": "latest"
     }
 }

@@ -23,3 +23,20 @@
     color: #222;
     border:1px solid #222;
 }
+
+/* Classes dédiées Gestion Métier */
+
+.color-square{
+    max-width: 18px;
+    max-height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    border: 1px solid black;
+}
+
+#colorpicker{
+    /*background-color: #333;*/
+    /*border: 1px solid black;*/
+    min-height: 190px;
+    min-width: 190px;
+}

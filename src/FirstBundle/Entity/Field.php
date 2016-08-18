@@ -14,7 +14,7 @@ class Field
 {
     
     /**
-     * @ORM\ManyToOne(targetEntity="FirstBundle\Entity\Workset")
+     * @ORM\ManyToOne(targetEntity="FirstBundle\Entity\Workset", inversedBy="fields")
      * @ORM\JoinColumn(nullable=false)
      */    
     private $workset;    

@@ -12,4 +12,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class FieldRepository extends EntityRepository
 {
+    
+    public function getSelectListTest1(){
+        $qb = $this ->createQueryBuilder('f')
+                    ->where('f.id = 1');
+        
+        return $qb;
+    }
 }

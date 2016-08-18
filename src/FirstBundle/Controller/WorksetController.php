@@ -16,16 +16,18 @@ class WorksetController extends Controller
     public function indexAction()
     {
         
-        $em = $this->getDoctrine()->getManager();
-        
-        $worksetDAO = $em->getRepository('FirstBundle:Workset');
-        
-        $worksets=$worksetDAO->findAll();
+        $worksetDAO = $this ->getDoctrine()
+                            ->getManager()
+                            ->getRepository('FirstBundle:Workset');
+                            
+                
+                
+        $worksets = $worksetDAO->findAll();
         
 //        var_dump($worksets);
         
         // replace this example code with whatever you need
-        return $this->render('FirstBundle:Workset:test.html.twig', array(
+        return $this->render('FirstBundle:Workset:index.html.twig', array(
             'worksets'  => $worksets,
         ));        
 

@@ -5,7 +5,8 @@ first_homepage:
 first_say:
     path:     /say/{thing}
     defaults: { _controller: FirstBundle:Default:say,thing: anything }
-    
+
+#Worksets
 list_workset:
     path:     /workset/test
     defaults: { _controller: FirstBundle:Workset:index }
@@ -21,3 +22,20 @@ edit_workset:
 delete_workset:
     path:     /workset/delete/{id}
     defaults: { _controller: FirstBundle:Workset:delete }
+
+#Fields
+list_field:
+    path:     /field/test
+    defaults: { _controller: FirstBundle:Field:index }
+    
+create_field:
+    path:     /field/create
+    defaults: { _controller: FirstBundle:Field:create }
+    
+edit_field:
+    path:     /field/edit/{id}
+    defaults: { _controller: FirstBundle:Field:edit }
+    
+delete_field:
+    path:     /field/delete/{id}
+    defaults: { _controller: FirstBundle:Field:delete }

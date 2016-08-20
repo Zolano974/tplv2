@@ -70,7 +70,9 @@ class WorksetRepository extends EntityRepository
             );
         }
         
-       dump($outputData); die;
+//       dump($outputData); die;
+        
+        return $outputData;
     }
     
     private function getWorksetFields($id){

@@ -32,6 +32,45 @@ class TourRepository extends EntityRepository
         return true;
     }
     
+    public function getAllByNumber($workset_id, $user_id){
+        
+        $outputData = array();
+        
+        $tours = $this->getAllToursXItems($workset_id, $user_id);
+        
+        
+        foreach($tours as $tour){
+            
+            $tourXitem = new \stdClass();
+            $tourXitem->item_id     = $tour['item_id'];
+            $tourXitem->field_id    = $tour['field_id'];
+            $tourXitem->done        = $tour['done'];
+            
+            $outputData[$tour['iteration']][$tour['item_id']] = $tourXitem;
+            
+        }
+        
+        return $outputData;
+        
+        
+    }
+    
+    //renvoie une liste de données sur le remplissage tourXitem pour l'utilisateur & le workset passés en paramètres
+    private function getAllToursXItems($workset_id, $user_id){
+        
+        $qb = $this ->getEntityManager()
+                    ->getConnection()
+                    ->createQueryBuilder();
+        
+        $qb ->select('iteration, item_id, field_id, done')
+            ->from('tourXitem')
+            ->orderBy('field_id, item_id, iteration', 'ASC');
+        
+        return $qb  ->execute()
+                    ->fetchAll();
+        
+    }
+    
     //insère un tour pour un utilisateur donné & un workset donné
     private function insertTour($iteration, $user_id, $workset_id){
         

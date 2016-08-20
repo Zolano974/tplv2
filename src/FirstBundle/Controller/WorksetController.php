@@ -49,6 +49,8 @@ class WorksetController extends Controller
     
     public function workAction($id){
         
+        $user_id = 1;
+        
         $worksetDAO = $this ->getDoctrine()
                             ->getManager()
                             ->getRepository('FirstBundle:Workset');
@@ -57,7 +59,31 @@ class WorksetController extends Controller
                             ->getManager()
                             ->getRepository('FirstBundle:Tour');
         
-        $tourDAO->createTour(2, $id);
+        $items = $worksetDAO->getAllItemsDataByWorksetId($id);
+        
+        $tours = $tourDAO->getAllByNumber($id , $user_id);
+        
+//        dump($tours);
+//        dump("trololo");
+//        dump($items);
+        
+        return $this->render('FirstBundle:Workset:work.html.twig', array(
+            'data'  => $items,
+            'tours' => $tours,
+        ));               
+    }
+    
+    public function testAction($id){
+        
+        $worksetDAO = $this ->getDoctrine()
+                            ->getManager()
+                            ->getRepository('FirstBundle:Workset');
+        
+        $tourDAO = $this ->getDoctrine()
+                            ->getManager()
+                            ->getRepository('FirstBundle:Tour');
+        
+        $tourDAO->createTour(1, $id);
         
         die;
         

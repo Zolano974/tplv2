@@ -20,9 +20,10 @@ class FieldController extends Controller
         
         $fieldDAO = $em->getRepository('FirstBundle:Field');
         
-        $fields = $fieldDAO->findAll();
+//        $fields = $fieldDAO->findAll();
+        $fields = $fieldDAO->fetchAllWithItems();
         
-//        var_dump($fields);
+//       dump($fields);die;
         
         // replace this example code with whatever you need
         return $this->render('FirstBundle:Field:index.html.twig', array(

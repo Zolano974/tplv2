@@ -8,7 +8,7 @@ first_say:
 
 #Worksets 
 list_workset:
-    path:     /workset/index
+    path:     /workset
     defaults: { _controller: FirstBundle:Workset:index }
 
 view_workset:
@@ -29,7 +29,7 @@ delete_workset:
 
 #Fields
 list_field:
-    path:     /field/test
+    path:     /field
     defaults: { _controller: FirstBundle:Field:index }
   
 view_field:
@@ -50,7 +50,7 @@ delete_field:
 
 #Items
 list_item:
-    path:     /item/test
+    path:     /item
     defaults: { _controller: FirstBundle:Item:index }
   
 view_item:

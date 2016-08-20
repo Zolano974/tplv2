@@ -23,10 +23,12 @@
         <div class="col-md-12">
             
             <div class="table-responsive table list">
-                <table class="table table-striped table-bordered">
+                <table id="items_table" class="table table-striped table-bordered">
+                    
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Number</th>
                             <th>Name</th>
                             <th>Field</th>
                             <th>Actions</th>
@@ -37,7 +39,10 @@
                     {% for item in items %}
                         <tr>
                             <td class="col-md-1">
-                                {{ item.id }} - 
+                                #{{ item.id }}
+                            </td>     
+                            <td class="col-md-1">
+                                {{ item.number }} 
                             </td>     
                             <td class="col-md-6">
                                 <b>{{ item.name }} </b>
@@ -46,9 +51,9 @@
                                 {{ item.field.name }}
                             </td>
                             <td>
-                                <a href="{{ path('view_item', {'id': item.id }) }}">
+{#                                <a href="{{ path('view_item', {'id': item.id }) }}">
                                     <span class="glyphicon glyphicon-eye-open"></span>
-                                </a>
+                                </a>#}
                                 <a href="{{ path('edit_item', {'id': item.id }) }}">
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </a>
@@ -80,6 +85,14 @@
             
         </div>
     </div>
-    
-    
+{% endblock  %}
+
+{% block js_scripts %}
+       
+        <script type="text/javascript">
+           $(document).ready(function(){
+               $("#items_table").DataTable();
+           });
+        </script>   
+
 {% endblock  %}

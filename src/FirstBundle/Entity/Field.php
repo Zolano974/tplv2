@@ -41,7 +41,14 @@ class Field
      * @ORM\Column(name="color", type="string", length=7)
      */
     private $color;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="FirstBundle\Entity\Item", mappedBy="field", cascade={"remove"})
+     */      
+    private $items;
 
+    
+    
 
     /**
      * Get id
@@ -121,4 +128,14 @@ class Field
     {
         return $this->workset;
     }
+    function getItems() {
+        return $this->items;
+    }
+
+    function setItems($items) {
+        $this->items = $items;
+    }
+
+
+    
 }

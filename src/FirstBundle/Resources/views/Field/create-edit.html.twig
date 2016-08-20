@@ -90,16 +90,19 @@
         </div>
 
     </div>
-                
-                <script type="text/javascript">
-                    $(document).ready(function(){
-                        {% if action == 'create'%}
-                            $("#field_color").val("#999999");
-                        {% endif %}                        
-                        
-                        $("#colorpicker").farbtastic("#field_color");
-                    });
-                </script>
 
+{% endblock  %}
+
+{% block js_scripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            {% if action == 'create'%}
+                $("#field_color").val("#999999");
+            {% endif %}                        
+
+            $("#colorpicker").farbtastic("#field_color");
+        });
+    </script>    
 {% endblock  %}
 

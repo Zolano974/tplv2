@@ -26,6 +26,10 @@
             <!-- BootstrapJS  -->
             <script type="text/javascript" src="{{ asset('bundles/first/lib/bootstrap/dist/js/bootstrap.min.js') }}"></script>
             
+            <!-- DataTables   -->
+            <script type="text/javascript" src="{{ asset('bundles/first/lib/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+{#            <link rel="stylesheet" href="{{ asset('bundles/first/lib/datatables.net/css/dataTables.bootstrap.min.css') }}" type="text/css" />#}
+            
             <!-- fartbtastic (color picker) -->
             <link rel="stylesheet" href="{{ asset('bundles/first/lib/fartbtastic/dist/css/fartbtastic.css') }}" type="text/css" />
             <script type="text/javascript" src="{{ asset('bundles/first/lib/fartbtastic/dist/js/fartbtastic.js') }}"></script>
@@ -53,12 +57,18 @@
             </div>
                 
         </div>
+      
 
         <footer class="footer">
             <div class="container">
                 <p class="pull-left">&copy; Tourplanner V2</p>
             </div>
         </footer>
-
+                
+{#        <script type="text/javascript">#}
+            {% block js_scripts %}
+            {% endblock %}
+{#        </script>  #}
+                
     </body>
 </html>

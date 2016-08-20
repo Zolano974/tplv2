@@ -16,7 +16,7 @@ class ItemType extends AbstractType
     {
         $builder
             ->add('name', 'text')
-            ->add('number', 'number')
+            ->add('number', 'integer')
             ->add('field', 'entity', array(
                                             'class'         =>'FirstBundle:Field',
                                             'property'      => 'name',

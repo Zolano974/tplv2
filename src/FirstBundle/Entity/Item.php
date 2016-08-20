@@ -16,7 +16,8 @@ class Item
      * @ORM\ManyToOne(targetEntity="FirstBundle\Entity\Field", inversedBy="items")
      * @ORM\JoinColumn(nullable=false)
      */    
-    private $field;        
+    private $field;    
+        
     
     /**
      * @var int
@@ -33,6 +34,13 @@ class Item
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="number", type="integer", unique=false)
+     */
+    private $number;
 
 
     /**
@@ -66,6 +74,29 @@ class Item
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set number
+     *
+     * @param integer $number
+     * @return Item
+     */
+    public function setNumber($number)
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+
+    /**
+     * Get number
+     *
+     * @return integer 
+     */
+    public function getNumber()
+    {
+        return $this->number;
     }
     
     function getField() {

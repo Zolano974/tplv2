@@ -15,6 +15,8 @@
         <div class="panel col-md-10 col-md-offset-1">
             
             <div class='panel-body'>
+                
+{#                INFOS DE BASE DU WORKSET#}
                 <div class="row">
                     
                     <div class="col-md-6">
@@ -46,12 +48,16 @@
                             </thead>
                                 #}
                             <tbody>
+                                
+                                    
+{#                            LISTE DES FIELDS (AVEC SOUS-LIGNE POUR CHAQUE ITEM)#}
+                                
                             {% for field in workset.fields %}
                                 <tr onclick="display_items('{{ field.id }}')" style="cursor: pointer">
                                     <td class="col-md-1">
                                         {{ field.id }}
                                     </td>     
-                                    <td class="col-md-6">
+                                    <td class="col-md-8">
                                         <div class="col-md-7">
                                             <b>{{ field.name }} &nbsp;&nbsp; </b>
                                         </div>
@@ -63,13 +69,10 @@
                                         </div>
 
                                     </td>
-                                    <td class="col-md-3">
+                                    <td class="col-md-2">
                                         {{ field.workset.name }}
                                     </td>
-                                    <td>
-                                        <a href="{{ path('view_field', {'id': field.id }) }}">
-                                            <span class="glyphicon glyphicon-eye-open"></span>
-                                        </a>
+                                    <td class='col-md-1'>
                                         <a href="{{ path('edit_field', {'id': field.id }) }}">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </a>
@@ -87,13 +90,11 @@
                                                 #{{ item.id }}
                                             </div>
                                             <div class="col-md-10">
-
-                                                 &nbsp;&nbsp;&nbsp; {{ item.number }} - {{ item.name }}
+                                                {{ item.number }} - {{ item.name }}
                                             </div>
                                         </td>
                                         <td>-</td>
-                                        <td>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <td class='col-md-1'>
                                             <a href="{{ path('edit_item', {'id': item.id }) }}">
                                                 <span class="glyphicon glyphicon-pencil"></span>
                                             </a>

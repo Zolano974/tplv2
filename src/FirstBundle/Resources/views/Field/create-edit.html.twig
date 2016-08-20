@@ -17,6 +17,8 @@
 
     <div class="row">
         
+{#        TITRE DE LA PAGE#}
+
         <div class="col-md-12">
             <h2>
                 {% if action == 'create'%}
@@ -33,6 +35,9 @@
         
         <div class="col-md-4 col-md-offset-2">
             
+            
+{#            FORMULAIRE D'AJOUT EDITION#}
+
             <form method="POST" {{ form_enctype(form) }}>
                 <div class="row">
                     
@@ -84,7 +89,7 @@
            </form>
         </div>
                 
-                
+{#        DIV DU COLORPICKER#}
         <div class="panel col-md-4">
             <div id="colorpicker"></div>  
         </div>
@@ -95,6 +100,7 @@
 
 {% block js_scripts %}
 
+{#    ACTIVATION DU COLORPICKER#}
     <script type="text/javascript">
         $(document).ready(function(){
             {% if action == 'create'%}

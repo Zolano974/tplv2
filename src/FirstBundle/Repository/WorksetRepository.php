@@ -22,6 +22,16 @@ class WorksetRepository extends EntityRepository
                     ->where('w.id = ' . $id)
                     ->addSelect('f');
         
+        return $qb->getQuery()->getResult()[0];
+     
+    }
+    
+    public function fetchAllWithFields(){
+
+        $qb = $this ->createQueryBuilder('w')
+                    ->leftJoin('w.fields', 'f')
+                    ->addSelect('f');
+        
         return $qb->getQuery()->getResult();
      
     }

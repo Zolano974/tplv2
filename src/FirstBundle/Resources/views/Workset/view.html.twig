@@ -14,26 +14,65 @@
         
         <div class="panel col-md-10 col-md-offset-1">
         
-            <div class='panel-body'>
-                <div class="col-md-12">
-                    <h1>    
+            <h1>    
                         View Workset
-                    </h1>
-                </div>                
+             </h1>
+            
+            <div class='panel-body'>
+                <div class="row">
+                    
+                    <div class="col-md-9">
+                        <h2 >{{ workset.name }}</h2>
+                    </div>   
+                    <div class="col-md-3">
+                        <p> {{ workset.description }} <p>
+                    </div>                    
+                </div>
     
                 <hr>
 
-                <br>
-  {#              <div class='row'>
-
-                    <div class="col-md-3">
-                        <h2 >{{ workset.name }}</h2>
+                <div class='row'>
+                    <div class="col-md-6 col-md-offset-3">
+                        <h3>Fields List</h3>
+                    </div>                    
+                </div>                
+                <div class='row'>
+                    
+                    <div class="table table-responsive">
+                        <table class="table table-responsive table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1">
+                                        N°
+                                    </th>
+                                    <th class="col-md-8">
+                                        Name
+                                    </th>
+                                    <th class="col-md-1">
+                                        Color
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for field in workset.fields %}
+                                    <tr>
+                                        <td  class="col-md-1">
+                                            #{{ field.id }}
+                                        </td>
+                                        <td  class="col-md-8">
+                                            {{ field.name }}
+                                        </td>
+                                        <td  class="col-md-1">
+                                            <div class="color-square" style="background-color: {{ field.color }}"></div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="col-md-5">
-                        <p> {{ workset.description }} <p>
-                    </div>
-                </div>   #}             
+                    
+                </div>                
             </div>            
 
       

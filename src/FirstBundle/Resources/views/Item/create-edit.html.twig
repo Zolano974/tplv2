@@ -1,13 +1,13 @@
-{# Field/Create #}
+{# Item/Create #}
 
 {% extends "FirstBundle:Layouts:layout.html.twig" %}
 
 {% block title %}
     
     {% if action == 'create'%}
-        Create Field
+        Create Item
     {% else %}
-        Edit Field
+        Edit Item
     {% endif %}
     
     
@@ -20,9 +20,9 @@
         <div class="col-md-12">
             <h2>
                 {% if action == 'create'%}
-                    Create Field
+                    Create Item
                 {% else %}
-                    Edit Field
+                    Edit Item
                 {% endif %}
     
             </h2>
@@ -38,7 +38,7 @@
                     
                     <div class="form-group">
                         <div class="col-xs-6">
-                            {{ form_label(form.name, "Field Name") }}
+                            {{ form_label(form.name, "Item Name") }}
                             {{ form_errors(form.name)}}
                         </div>
                         <div class="col-xs-6">
@@ -50,23 +50,11 @@
                 <div class="row">
                     <div class="form-group">
                         <div class="col-xs-6">
-                            {{ form_label(form.color, "Field Color") }}
-                            {{ form_errors(form.color)}}
+                            {{ form_label(form.field, "Field") }}
+                            {{ form_errors(form.field)}}
                         </div>
                         <div class="col-xs-6">
-                            {{ form_widget(form.color)}}
-                        </div>
-                    </div>
-                </div>
-                        <hr>
-                <div class="row">
-                    <div class="form-group">
-                        <div class="col-xs-6">
-                            {{ form_label(form.workset, "Workset") }}
-                            {{ form_errors(form.workset)}}
-                        </div>
-                        <div class="col-xs-6">
-                            {{ form_widget(form.workset)}}
+                            {{ form_widget(form.field)}}
                         </div>
                     </div>
                 </div>
@@ -76,30 +64,13 @@
                     <div class="form-group">
                         <div class="col-xs-6 col-xs-offset-6">
 
-                            <input type="submit" class="btn btn-custom">
+                            <input type="submit" class="btn btn-custom" value="Add">
                         </div>
                     </div>                    
                 </div>
 
            </form>
         </div>
-                
-                
-        <div class="panel col-md-4">
-            <div id="colorpicker"></div>  
-        </div>
-
     </div>
-                
-                <script type="text/javascript">
-                    $(document).ready(function(){
-                        {% if action == 'create'%}
-                            $("#field_color").val("#999999");
-                        {% endif %}                        
-                        
-                        $("#colorpicker").farbtastic("#field_color");
-                    });
-                </script>
-
 {% endblock  %}
 

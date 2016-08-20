@@ -47,3 +47,24 @@ edit_field:
 delete_field:
     path:     /field/delete/{id}
     defaults: { _controller: FirstBundle:Field:delete }
+
+#Items
+list_item:
+    path:     /item/test
+    defaults: { _controller: FirstBundle:Item:index }
+  
+view_item:
+    path:     /item/view/{id}
+    defaults: { _controller: FirstBundle:Item:view }
+    
+create_item:
+    path:     /item/create
+    defaults: { _controller: FirstBundle:Item:create }
+    
+edit_item:
+    path:     /item/edit/{id}
+    defaults: { _controller: FirstBundle:Item:edit }
+    
+delete_item:
+    path:     /item/delete/{id}
+    defaults: { _controller: FirstBundle:Item:delete }

@@ -12,10 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Workset
 {
-    /**
-     * @ORM\OneToMany(targetEntity="FirstBundle\Entity\Field", mappedBy="workset")
-     */    
-    private $fields;
+
     
     /**
      * @var int
@@ -46,6 +43,11 @@ class Workset
      * @ORM\Column(name="generic", type="boolean")
      */
     private $generic;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="FirstBundle\Entity\Field", mappedBy="workset")
+     */    
+    private $fields;    
 
 
     /**

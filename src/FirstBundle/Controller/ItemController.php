@@ -5,58 +5,53 @@ namespace FirstBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-use FirstBundle\Entity\Workset;
-use FirstBundle\Repository\WorksetRepository;
-use FirstBundle\Form\WorksetType;
+use FirstBundle\Repository\ItemRepository;
+use FirstBundle\Entity\Item;
+use FirstBundle\Form\ItemType;
 
 use \Symfony\Component\Translation\Exception\NotFoundResourceException;
 
-class WorksetController extends Controller
+class ItemController extends Controller
 {
     public function indexAction()
     {
         
-        $worksetDAO = $this ->getDoctrine()
-                            ->getManager()
-                            ->getRepository('FirstBundle:Workset');
-                            
-                
-                
-        $worksets = $worksetDAO->findAll();
-//        $worksets = $worksetDAO->fetchAllWithFields();
-
-//        dump($worksets);die;
-
-        return $this->render('FirstBundle:Workset:index.html.twig', array(
-            'worksets'  => $worksets,
+        $em = $this->getDoctrine()->getManager();
+        
+        $itemDAO = $em->getRepository('FirstBundle:Item');
+        
+        $items = $itemDAO->findAll();
+        
+//        var_dump($items);
+        
+        return $this->render('FirstBundle:Item:index.html.twig', array(
+            'items'  => $items,
         ));        
 
     }
     
+    
     public function viewAction($id){
-
-        $workset = $this ->getDoctrine()
-                    ->getManager()
-                    ->getRepository('FirstBundle:Workset')
-                    ->fetchOneWithFields($id);
-//                    ->find($id);
-
-// 
-                    
         
-        return $this->render('FirstBundle:Workset:view.html.twig', array(
-            'workset'  => $workset,
+        $em = $this->getDoctrine()->getManager();
+        
+        $itemDAO = $em->getRepository('FirstBundle:Item');
+        
+        $item = $itemDAO->find($id);
+        
+        return $this->render('FirstBundle:Item:view.html.twig', array(
+            'item'  => $item,
         ));        
                 
-    }
+    }    
     
     public function createAction()
     {
         
         //on créer un Workset et on lui donne des valeurs en dur pour l'instant
-        $workset = new Workset();
+        $item = new Item();
 
-        $form = $this->createForm(new WorksetType(), $workset);
+        $form = $this->createForm(new ItemType(), $item);
         
         $request = $this->getRequest();
         
@@ -70,19 +65,19 @@ class WorksetController extends Controller
                 //on récupère le EntityManager
                 $em = $this->getDoctrine()->getManager();   
                 
-                //on persiste le workset
-                $em->persist($workset);    
+                //on persiste le item
+                $em->persist($item);    
                 
                 //on valide les transactions
                 $em->flush();  
                 
                 //onrenvoie vers la liste
-                $url = $this->generateUrl('list_workset');
+                $url = $this->generateUrl('list_item');
                 return $this->redirect($url);                
             }
         }
         
-        return $this->render('FirstBundle:Workset:create-edit.html.twig',array(
+        return $this->render('FirstBundle:Item:create-edit.html.twig',array(
             'action'    => 'create',
             'form'      => $form->createView(),
         ));
@@ -93,36 +88,38 @@ class WorksetController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
-        $worksetDAO = $em->getRepository('FirstBundle:Workset');
+        $itemDAO = $em->getRepository('FirstBundle:Item');
         
-        $workset = $worksetDAO->find($id);
+        $item = $itemDAO->find($id);
         
-        $form = $this->createForm(new WorksetType(), $workset);
+        $form = $this->createForm(new ItemType(), $item);
         
         $request = $this->getRequest();     
         
+        //si le form a été soumis
         if($request->getMethod() == 'POST'){
             
             $form->bind($request);
             
+            //si il est valide
             if($form->isValid()){
                 
                 //on récupère le EntityManager
                 $em = $this->getDoctrine()->getManager();   
                 
-                //on persiste le workset
-                $em->persist($workset);    
+                //on persiste le item
+                $em->persist($item);    
                 
                 //on valide les transactions
                 $em->flush();  
                 
                 //onrenvoie vers la liste
-                $url = $this->generateUrl('list_workset');
+                $url = $this->generateUrl('list_item');
                 return $this->redirect($url);                
             }
         }
         
-        return $this->render('FirstBundle:Workset:create-edit.html.twig',array(
+        return $this->render('FirstBundle:Item:create-edit.html.twig',array(
             'action'    => 'edit',
             'form'      => $form->createView(),
         ));
@@ -136,29 +133,29 @@ class WorksetController extends Controller
             throw new NotFoundResourceException();
         }        
         
+        //si le form a été soumis
         if($this->getRequest()->getMethod() == 'POST'){
             
             $id = $this->getRequest()->request->get('delete_id');
 
             $em = $this->getDoctrine()->getManager();
 
-            $worksetDAO = $em->getRepository('FirstBundle:Workset');
+            $itemDAO = $em->getRepository('FirstBundle:Item');
 
-            $workset = $worksetDAO->find($id);
+            $item = $itemDAO->find($id);
 
-            $em->remove($workset);
+            $em->remove($item);
 
             $em->flush();
 
-            $url = $this->generateUrl('list_workset');
+            $url = $this->generateUrl('list_item');
 
             return $this->redirect($url);                 
         }
         
-        return $this->render('FirstBundle:Workset:delete.html.twig', array(
+        return $this->render('FirstBundle:Item:delete.html.twig', array(
             'id'    => $id,
         ));        
         
     }
-    
 }

@@ -18,8 +18,7 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/assetic-bundle": "^2.8",
-        
-        "it-blaster/color-picker-type-bundle": "1.0.*"
+        "symfony/var-dumper": "^2.8"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

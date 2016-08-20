@@ -13,10 +13,24 @@ use Doctrine\ORM\EntityRepository;
 class FieldRepository extends EntityRepository
 {
     
-    public function getSelectListTest1(){
+    public function fetchOneWithItems($id){
+
         $qb = $this ->createQueryBuilder('f')
-                    ->where('f.id = 1');
+                    ->leftJoin('f.items', 'i')
+                    ->where('f.id = ' . $id)
+                    ->addSelect('i');
         
-        return $qb;
+        return $qb->getQuery()->getResult()[0];
+     
+    }
+    
+    public function fetchAllWithItems(){
+
+        $qb = $this ->createQueryBuilder('f')
+                    ->leftJoin('f.items', 'i')
+                    ->addSelect('i');
+        
+        return $qb->getQuery()->getResult();
+     
     }
 }

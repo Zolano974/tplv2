@@ -35,6 +35,52 @@ class WorksetRepository extends EntityRepository
         return $qb->getQuery()->getResult();
      
     }
+    
+    public function getAllItemsDataByWorksetId($id){
+        
+//        $em = $this->getEntityManager();
+//        
+//        $conn = $em->getConnection();
+//        
+//        $qb = $conn->createQueryBuilder();
+//        
+//        $qb     ->select('id')
+//                ->from('user');
+//        
+//        $statement = $qb->execute();
+//        
+//        $result = $statement->fetchAll();
+        
+        
+        $fieldRepository = $this->getEntityManager()->getRepository('FirstBundle:Field');
+        $itemRepository = $this->getEntityManager()->getRepository('FirstBundle:Item');        
+        
+        $outputData = array();
+
+        
+        $fields = $fieldRepository->fetchAllByWorksetId($id);
+        
+        foreach($fields as $field){
+            
+            $items = $itemRepository->fetchAllByFieldId($field->getId());
+            
+            $outputData[$field->getId()] = array(
+                'field' => $field,
+                'items' => $items,
+            );
+        }
+        
+       dump($outputData); die;
+    }
+    
+    private function getWorksetFields($id){
+        
+        $workset = $this->fetchOneWithFields($id);
+        
+        return $workset->getFields();
+        
+        
+    }
 }
 
 

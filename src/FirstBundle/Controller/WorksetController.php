@@ -47,6 +47,27 @@ class WorksetController extends Controller
                 
     }
     
+    public function workAction($id){
+        
+        $worksetDAO = $this ->getDoctrine()
+                            ->getManager()
+                            ->getRepository('FirstBundle:Workset');
+        
+        $tourDAO = $this ->getDoctrine()
+                            ->getManager()
+                            ->getRepository('FirstBundle:Tour');
+        
+        $tourDAO->createTour(2, $id);
+        
+        die;
+        
+//        $items = $worksetDAO->getAllItemsDataByWorksetId($id);
+        
+        return $this->render('FirstBundle:Workset:work.html.twig', array(
+            'data'  => $data,
+        ));               
+    }
+    
     public function createAction()
     {
         

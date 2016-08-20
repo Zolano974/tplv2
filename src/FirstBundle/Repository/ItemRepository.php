@@ -12,4 +12,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class ItemRepository extends EntityRepository
 {
+    public function fetchAllByFieldId($id){
+        return $this->findBy(array('field' => $id));
+    }
 }

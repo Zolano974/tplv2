@@ -33,4 +33,19 @@ class FieldRepository extends EntityRepository
         return $qb->getQuery()->getResult();
      
     }
+    
+    public function fetchAllWithItemsByWorksetId($workset_id){
+
+        $qb = $this ->createQueryBuilder('f')
+                    ->leftJoin('f.items', 'i')
+                    ->where('f.workset = '.$workset_id)
+                    ->addSelect('i');
+        
+        return $qb->getQuery()->getResult();
+     
+    }
+    
+    public function fetchAllByWorksetId($id){
+        return $this->findBy(array('workset' => $id));
+    }
 }

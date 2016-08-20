@@ -7,8 +7,13 @@ first_say:
     defaults: { _controller: FirstBundle:Default:say,thing: anything }
 
 #Worksets 
+
+work_workset:
+    path:     /workset/{id}
+    defaults: { _controller: FirstBundle:Workset:work }
+
 list_workset:
-    path:     /workset
+    path:     /workset/index
     defaults: { _controller: FirstBundle:Workset:index }
 
 view_workset:

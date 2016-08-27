@@ -6,6 +6,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+
+
 class WorksetType extends AbstractType
 {
     /**
@@ -14,10 +19,10 @@ class WorksetType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name'            ,'text')
-            ->add('description'     ,'textarea')
-            ->add('generic'         ,'checkbox', array('required' => false))
+        $add = $builder
+            ->add('name'            , TextType::class)
+            ->add('description'     , TextareaType::class)
+            ->add('generic'         ,  CheckboxType::class, array('required' => false))
         ;
     }
     

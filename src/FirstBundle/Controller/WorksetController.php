@@ -3,6 +3,7 @@
 namespace FirstBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use FirstBundle\Entity\Workset;
@@ -100,14 +101,14 @@ class WorksetController extends Controller
         //on créer un Workset et on lui donne des valeurs en dur pour l'instant
         $workset = new Workset();
 
-        $form = $this->createForm(new WorksetType(), $workset);
+        $form = $this->createForm(WorksetType::class, $workset);
         
-        $request = $this->getRequest();
+        $request = Request::createFromGlobals();
         
         //si le formulaire a été soumis
         if($request->getMethod() == 'POST'){
             
-            $form->bind($request);
+            $form->handleRequest($request);
             
             if($form->isValid()){
                 
@@ -141,13 +142,13 @@ class WorksetController extends Controller
         
         $workset = $worksetDAO->find($id);
         
-        $form = $this->createForm(new WorksetType(), $workset);
+        $form = $this->createForm(WorksetType::class, $workset);
         
-        $request = $this->getRequest();     
+        $request = Request::createFromGlobals();
         
         if($request->getMethod() == 'POST'){
             
-            $form->bind($request);
+            $form->handleRequest($request);
             
             if($form->isValid()){
                 
@@ -180,10 +181,12 @@ class WorksetController extends Controller
             throw new NotFoundResourceException();
         }        
         
-        if($this->getRequest()->getMethod() == 'POST'){
+        $request = Request::createFromGlobals();
+        
+        if($request->getMethod() == 'POST'){
             
-            $id = $this->getRequest()->request->get('delete_id');
-
+            $id = $request->request->get('delete_id');
+            
             $em = $this->getDoctrine()->getManager();
 
             $worksetDAO = $em->getRepository('FirstBundle:Workset');

@@ -9,9 +9,7 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        
-        
-        
+
         #générationd'url en fonction d'une route définie
         $url = $this->generateUrl('first_say', array( //omde la route tel que défini dans routing.yml
             'thing' =>  'redirection'

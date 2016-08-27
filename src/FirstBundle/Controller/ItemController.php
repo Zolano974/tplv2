@@ -3,6 +3,7 @@
 namespace FirstBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use FirstBundle\Repository\ItemRepository;
@@ -51,14 +52,14 @@ class ItemController extends Controller
         //on créer un Workset et on lui donne des valeurs en dur pour l'instant
         $item = new Item();
 
-        $form = $this->createForm(new ItemType(), $item);
+        $form = $this->createForm(ItemType::class, $item);
         
-        $request = $this->getRequest();
+        $request = Request::createFromGlobals();
         
         //si le formulaire a été soumis
         if($request->getMethod() == 'POST'){
             
-            $form->bind($request);
+            $form->handleRequest($request);
             
             if($form->isValid()){
                 
@@ -92,14 +93,14 @@ class ItemController extends Controller
         
         $item = $itemDAO->find($id);
         
-        $form = $this->createForm(new ItemType(), $item);
+        $form = $this->createForm(ItemType::class, $item);
         
-        $request = $this->getRequest();     
+        $request = Request::createFromGlobals();   
         
         //si le form a été soumis
         if($request->getMethod() == 'POST'){
             
-            $form->bind($request);
+            $form->handleRequest($request);
             
             //si il est valide
             if($form->isValid()){
@@ -133,10 +134,12 @@ class ItemController extends Controller
             throw new NotFoundResourceException();
         }        
         
+        $request = Request::createFromGlobals();
+        
         //si le form a été soumis
-        if($this->getRequest()->getMethod() == 'POST'){
+        if($request->getMethod() == 'POST'){
             
-            $id = $this->getRequest()->request->get('delete_id');
+            $id = $request->request->get('delete_id');
 
             $em = $this->getDoctrine()->getManager();
 

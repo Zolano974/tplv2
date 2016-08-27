@@ -5,40 +5,43 @@ namespace FirstBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use FirstBundle\Repository\FieldRepository;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
-class FieldType extends AbstractType
-{
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+class FieldType extends AbstractType {
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('name', 'text')
-            ->add('color', 'text')
-            ->add('workset', 'entity', array(
-                                            'class'         =>'FirstBundle:Workset',
-                                            'property'      => 'name',
-                                            'multiple'      => false,
-                                            'expanded'      => false,
-                                            //pour personnaliser la liste
+                ->add('name', TextType::class)
+                ->add('color', TextType::class)
+                ->add('workset', EntityType::class, array(
+                    'class' => 'FirstBundle:Workset',
+                    'choice_label' => 'name',
+                    'multiple' => false,
+                    'expanded' => false,
+                        //pour personnaliser la liste
 //                                            'querybuilder'  => function(FirstBundle\Repository\FieldRepository $r){
 //                                                return $r->getSelectListTest1();
 //                                            },
-                                        ));
+        ));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
-    {
+    public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'FirstBundle\Entity\Field'
         ));
     }
+
 }

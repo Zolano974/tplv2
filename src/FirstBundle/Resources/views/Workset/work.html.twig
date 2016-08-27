@@ -4,7 +4,7 @@
 
 {% block title %}
     
-    Faut pas Chaiser ! 
+    Faut pas Chaiser !
     
 {% endblock  %}
 
@@ -26,7 +26,12 @@
             <div class="panel-body" >
                     <!--    #table1    -->
                 <table  id="items_table" class="table-responsive table col-md-12">
-                    <!-- TOUDOU -->
+                    
+                    <ul>
+    {% for key, user in users %}
+        <li>{{ key }}: {{ user.username|e }}</li>
+    {% endfor %}
+</ul>
                 </table>
             </div>
         </div>

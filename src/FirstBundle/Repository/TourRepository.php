@@ -14,7 +14,7 @@ class TourRepository extends EntityRepository
 {
     
     //fonction dédiée à créer un tour pour tous les utilisateurs, pour un workset donné
-    public function createTour($num, $workset_id){
+    public function createTour($num, $workset_id, $user_id){
         
         $em = $this->getEntityManager();
         
@@ -22,7 +22,7 @@ class TourRepository extends EntityRepository
         
         //on récupère la liste des utilisateurs
         $userlist = $em->getRepository('FirstBundle:User')
-                        ->findAll();
+                        ->findBy(array('id'  => $user_id));
         
         foreach($userlist as $user){
             //pour chacun, on délègue l'opération à InsertTour
@@ -64,6 +64,7 @@ class TourRepository extends EntityRepository
         
         $qb ->select('iteration, item_id, field_id, done')
             ->from('tourXitem')
+            ->where('user_id = ' . $user_id)
             ->orderBy('field_id, item_id, iteration', 'ASC');
         
         return $qb  ->execute()
@@ -87,12 +88,12 @@ class TourRepository extends EntityRepository
         $id = $cnx->lastInsertId();
         
         //on délègue la suite à INSERTTOURLINKS
-        $this->insertTourLinks($id, $workset_id);
+        $this->insertTourLinks($id, $workset_id, $user_id);
 
     }
     
     //insère les liens (link_tour_field & link_tour_item) pour un tour en BDD, pour le workset donné
-    private function insertTourLinks($tour_id, $workset_id){
+    private function insertTourLinks($tour_id, $workset_id, $user_id){
         
         $em = $this->getEntityManager();
         
@@ -102,12 +103,12 @@ class TourRepository extends EntityRepository
         
         foreach($fields as $field) {
             //pour chacun, on délègue la suite a insertLinks()
-            $this->insertLinks($field, $tour_id);
+            $this->insertLinks($field, $tour_id, $user_id);
         }
     }
     
     //insère le lien entre un tour et un field en BDD
-    private function insertLinks($field, $tour_id){
+    private function insertLinks($field, $tour_id, $user_id){
         
         $cnx = $this->getEntityManager()->getConnection();
         
@@ -115,6 +116,7 @@ class TourRepository extends EntityRepository
         $cnx  ->insert('link_tour_field', array(
                     'tour_id'   => $tour_id,
                     'field_id'  => $field->getId(),
+                    'user_id'   => $user_id,
                     'done'      => 0, //a la création les tours ne sont pas cochés
                 ));
         
@@ -124,8 +126,13 @@ class TourRepository extends EntityRepository
             $cnx    ->insert('link_tour_item', array(
                         'tour_id'   => $tour_id,
                         'item_id'   => $item->getId(),
+                        'user_id'   => $user_id,
                         'done'      => 0, //a la création les tours ne sont pas cochés
                     ));            
         }
+    }
+    
+    public function getMikbookedItems($workset_id, $user_id){
+        
     }
 }

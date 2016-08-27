@@ -40,3 +40,39 @@
     min-height: 190px;
     min-width: 190px;
 }
+
+/* PARTIE DEDIEE A LA VUE DE TRAVAIL */
+
+.push-top{
+    margin-top: 15px;
+}
+
+.field_td{
+    border-radius: 4px;
+}
+
+
+.pointer{
+    cursor: pointer;
+}
+
+.globe{
+    color: #111;
+}
+
+.item_body{
+    margin-left: 2%;
+    overflow-x: no-display;
+    font-size: 90%;
+}
+
+
+.mikbook_ok{
+    color:#0a0;
+}
+
+.check_item{
+
+    height: 20px;
+
+}

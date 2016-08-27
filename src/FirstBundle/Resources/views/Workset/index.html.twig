@@ -44,7 +44,9 @@
                                 {{ workset.id }} - 
                             </td>     
                             <td class="col-md-3">
-                                <b>{{ workset.name }} </b>
+                                <a href="{{ path('work_workset', {'id': workset.id }) }}">
+                                    <b>{{ workset.name }} </b>
+                                </a>
                             </td>
                             <td class="col-md-1">
                                 {% if workset.generic == 1 %}

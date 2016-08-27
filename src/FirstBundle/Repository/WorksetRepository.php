@@ -36,7 +36,7 @@ class WorksetRepository extends EntityRepository
      
     }
     
-    public function getAllItemsDataByWorksetId($id){
+    public function getAllItemsDataByWorksetId($id, $user_id){
         
 //        $em = $this->getEntityManager();
 //        
@@ -65,14 +65,54 @@ class WorksetRepository extends EntityRepository
             $items = $itemRepository->fetchAllByFieldId($field->getId());
             
             $outputData[$field->getId()] = array(
-                'field' => $field,
-                'items' => $items,
+                'field'             => $field,
+                'nb_tours_complete' => $this->getNbToursComplete($field->getId(), $user_id),
+                'items'             => $items,
             );
         }
         
 //       dump($outputData); die;
         
         return $outputData;
+    }
+    
+    //renvoie un tableau avec tous les items du workset, et un boolean si l'utilisateur les a mikbookés
+    public function getMikbookedItems($workset_id, $user_id){
+        
+        $outputData = array();
+        
+        $fieldRepository = $this->getEntityManager()->getRepository('FirstBundle:Field');
+        $itemRepository = $this->getEntityManager()->getRepository('FirstBundle:Item');        
+        
+        $fields = $fieldRepository->fetchAllByWorksetId($workset_id);
+        
+        foreach($fields as $field){
+            foreach($field->getItems() as $item){
+                $outputData[$item->getId()] = $itemRepository->isMikBooked($item->getId(), $user_id);
+            }
+        }
+        
+        return $outputData;
+    }    
+    
+    private function getNbToursComplete($field_id, $user_id){
+        
+        $qb = $this ->getEntityManager()
+                    ->getConnection()
+                    ->createQueryBuilder();
+        
+        $query = $qb->select('MAX(iteration) as nb')
+                    ->from('view_link_user_field')
+                    ->where('field_id = :f_id')
+                    ->andWhere('done = 1 ')
+                    ->andWhere(' user_id = :u_id')
+                    ->setParameter('f_id', $field_id)
+                    ->setParameter('u_id', $user_id);
+        
+        $result = $qb   ->execute()
+                        ->fetch();
+        
+        return ($result['nb'] !== null) ? $result['nb'] : 0;
     }
     
     private function getWorksetFields($id){

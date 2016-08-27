@@ -15,4 +15,22 @@ class ItemRepository extends EntityRepository
     public function fetchAllByFieldId($id){
         return $this->findBy(array('field' => $id));
     }
+    
+    public function isMikBooked($id, $user_id){
+        
+        $qb =   $this   ->getEntityManager()
+                        ->getConnection()
+                        ->createQueryBuilder();
+        
+        $query  = $qb   ->select('count(id) as count')
+                        ->from('item_mikbook')
+                        ->where('item_id = :i')
+                        ->andWhere('user_id = :u')
+                        ->setParameter('i',$id)
+                        ->setParameter('u',$user_id);
+        
+        $result = $query->execute()->fetch();
+        
+        return $result['count'] > 0;
+    }
 }

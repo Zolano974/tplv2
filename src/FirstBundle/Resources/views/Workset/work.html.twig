@@ -27,11 +27,77 @@
                     <!--    #table1    -->
                 <table  id="items_table" class="table-responsive table col-md-12">
                     
-                    <ul>
-    {% for key, user in users %}
-        <li>{{ key }}: {{ user.username|e }}</li>
-    {% endfor %}
-</ul>
+                {% for field_id, row in data %}
+                    {% set field = row.field %}
+                    {% set field_nb_tours = row.nb_tours_complete %}
+                    
+                    <tr class="push-top">
+                        <!-- fields list -->
+                        <th id="mat_{{ field_id }}" class="field_td col-md-12 pointer" onclick="deplier({{field_id}})" style="background-color:{{ field.color }}">
+                            <div class="col-md-11">
+                                <span class="col-md-3">{{ field.name }}</span>
+                                <small style="margin-left:5%" id="thumbsups-{{ field_id }}">
+                                    
+                                    {%for i in 0..field_nb_tours %}
+                                        {% if i > 0%}
+                                            <span class="glyphicon glyphicon-thumbs-up" ></span>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                </small>                                      
+                            </div>
+                        </th>
+                        
+                        {% for num_tour, tour in tours%}
+                            {% set globe_html_id = "t-" ~ num_tour ~ "_f-" ~ field_id %}
+                            <th >
+                                <a href="field_kanban?nt=ITERATION&fi=FIELD_ID" class="globe" onclick="openKanban('{{ globe_html_id }}')">
+                                    <span id="{{ globe_html_id }}" class="glyphicon glyphicon-th field_{{ field_id }}Xtour_{{ num_tour }}_globe pointer"></span>
+                                </a>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    {% for item in row.items %}
+                        {% if mikbooked[item.id] %}
+                            {% set book = "style=display:none" %}
+                            {% set glasses = "" %}
+                            {% set class = "mikbook_ok" %}
+                        {% else %}
+                            {% set book = "" %}
+                            {% set glasses = "style=display:none" %}
+                            {% set class = "" %}                       
+                        {% endif %}
+                        <tr>
+                            <td id="f-{{ field_id }}_i-{{ item.id }}" class="col-md-12 check_item {{ class }} subfield-{{ field_id }}" style="display:none">
+                                <span class="col-md-8 item_body"> 
+                                    #{{ item.id }} &nbsp;&nbsp;
+                                    {{item.name}}
+                                </span>
+                                <span class="col-md-2">
+                                    {% set html_id = "i-" ~  item.id ~ "_mkb_f-" ~  field_id  %}
+                                    <span {{ book }} id="{{ html_id }}" class="glyphicon glyphicon-book pointer" onclick='mikbook("{{ html_id }}");'></span>
+                                    <span {{ glasses }} id="{{ html_id }}_ok" class="glyphicon glyphicon-sunglasses mikbook_ok"></span>                                 
+                                </span>
+                            </td>
+                        {% for num_tour, tour in tours%}
+                            {% if tour[item.id].done == 0%}
+                                {% set undone = "" %}
+                                {% set check = "style=display:none;" %}
+                            {% else %}
+                                {% set undone = "style=display:none;" %}
+                                {% set check = "" %}
+                            {% endif %}
+                            <td class="check_item subfield-{{ tour[item.id].field_id }}" style="display:none">
+                                <span class="glyphicon glyphicon-pencil pointer" id="chk_t-{{ num_tour }}_i-{{ tour[item.id].item_id }}"   name="tour_{{ num_tour }}_check" {{ undone }} onclick='done("chk_t-{{ num_tour }}_i-{{ tour[item.id].item_id }}");'></span>
+
+                                <span id="chk_t-{{ num_tour }}_i-{{ tour[item.id].item_id }}_ok" class="glyphicon glyphicon-ok-sign field_{{ tour[item.id].field_id }}Xtour_{{ num_tour }} itemdone" {{ check }}></span>
+
+                            </td>
+                        {% endfor %}                            
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+
                 </table>
             </div>
         </div>
@@ -43,5 +109,39 @@
 
 {% block js_scripts %}
 
+    <script type="text/javascript">
+        
+        function showallitems(){
+            $('.check_item').show();
+            $("#hideallitems").show();
+            $("#showallitems").hide();
+        }
+
+        function hideallitems(){
+            $('.check_item').hide();
+            $("#showallitems").show();      
+            $("#hideallitems").hide();
+        }        
+        
+        function deplier(field_id){
+            $('.subfield-'+field_id).toggle();
+        }
+        
+        function openKanban(html_id){
+            alert('kanban ' + html_id);
+        }
+        
+        function mikbook(html_id){
+            alert('mikbook ' + html_id);
+        }
+        
+        function done(html_id){
+            alert('mikbook ' + html_id);
+        }
+        
+        $(document).ready(function(){
+
+        });
+    </script>    
 {% endblock  %}
 

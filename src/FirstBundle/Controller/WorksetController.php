@@ -60,21 +60,30 @@ class WorksetController extends Controller
                             ->getManager()
                             ->getRepository('FirstBundle:Tour');
         
-        $items = $worksetDAO->getAllItemsDataByWorksetId($id);
+        $items = $worksetDAO->getAllItemsDataByWorksetId($id, $user_id);
         
         $tours = $tourDAO->getAllByNumber($id , $user_id);
         
+        $mikbooked = $worksetDAO->getMikbookedItems($id,$user_id);
+        
+//        dump("tours");
 //        dump($tours);
-//        dump("trololo");
+//        dump("items");
 //        dump($items);
+//        dump("mikbooked");
+//        dump($mikbooked);
+//        die;
         
         return $this->render('FirstBundle:Workset:work.html.twig', array(
-            'data'  => $items,
-            'tours' => $tours,
+            'data'      => $items,
+            'tours'     => $tours,
+            'mikbooked' => $mikbooked,
         ));               
     }
     
     public function testAction($id){
+        
+        $request = Request::createFromGlobals();
         
         $worksetDAO = $this ->getDoctrine()
                             ->getManager()
@@ -84,7 +93,11 @@ class WorksetController extends Controller
                             ->getManager()
                             ->getRepository('FirstBundle:Tour');
         
-        $tourDAO->createTour(1, $id);
+        $iteration = $request->query->get('iteration');
+        
+        $user_id = 1;
+        
+        $tourDAO->createTour($iteration, $id, $user_id);
         
         die;
         

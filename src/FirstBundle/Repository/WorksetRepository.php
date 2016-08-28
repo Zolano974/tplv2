@@ -76,8 +76,7 @@ class WorksetRepository extends EntityRepository
         return $outputData;
     }
     
-    //renvoie un tableau avec tous les items du workset, et un boolean si l'utilisateur les a mikbookés
-    public function getMikbookedItems($workset_id, $user_id){
+    public function getItemStatus($workset_id, $user_id){
         
         $outputData = array();
         
@@ -88,13 +87,14 @@ class WorksetRepository extends EntityRepository
         
         foreach($fields as $field){
             foreach($field->getItems() as $item){
-                $outputData[$item->getId()] = $itemRepository->isMikBooked($item->getId(), $user_id);
+                $outputData[$item->getId()]['mikbook'] = $itemRepository->isMikBooked($item->getId(), $user_id);
+                $outputData[$item->getId()]['done'] = $itemRepository->isDone($item->getId(), $user_id);
             }
         }
         
-        return $outputData;
-    }    
-    
+        return $outputData;        
+    }
+   
     private function getNbToursComplete($field_id, $user_id){
         
         $qb = $this ->getEntityManager()

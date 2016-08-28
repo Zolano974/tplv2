@@ -27,7 +27,7 @@ class DefaultController extends Controller
         
         #utilisation del'objet request
         
-            $request = $this->getRequest(); 
+            $request = Request::createFromGlobals();
         
         #recupération d'un param GET non défini dans les routes
             

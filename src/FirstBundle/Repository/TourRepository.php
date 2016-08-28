@@ -65,6 +65,7 @@ class TourRepository extends EntityRepository
         $qb ->select('iteration, item_id, field_id, done')
             ->from('tourXitem')
             ->where('user_id = ' . $user_id)
+            ->andWhere('workset_id = ' . $workset_id)
             ->orderBy('field_id, item_id, iteration', 'ASC');
         
         return $qb  ->execute()
@@ -80,8 +81,9 @@ class TourRepository extends EntityRepository
         
         //on insère une entrée dans la table Tour (avec le user_id)
         $cnx    ->insert('tour', array(
-                    'user_id'    => $user_id,
-                    'iteration' => $iteration,
+                    'user_id'       => $user_id,
+                    'workset_id'    => $workset_id,
+                    'iteration'     => $iteration,
                 ));
         
         //on récupère l'ID inséré
@@ -132,7 +134,23 @@ class TourRepository extends EntityRepository
         }
     }
     
-    public function getMikbookedItems($workset_id, $user_id){
+    public function getLastTour($workset_id, $user_id){
         
+        
+        $qb = $this ->getEntityManager()
+                    ->getConnection()
+                    ->createQueryBuilder();
+
+        $query = $qb->select('MAX(iteration) as last')
+                    ->from('tour')
+                    ->where('user_id = :u')
+                    ->andWhere('workset_id = :w')
+                    ->setParameter('u', $user_id)
+                    ->setParameter('w', $workset_id);
+        
+        $result = $query->execute()->fetch();
+        
+        return $result['last'];
+                
     }
 }

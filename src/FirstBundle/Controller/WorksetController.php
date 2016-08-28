@@ -64,24 +64,42 @@ class WorksetController extends Controller
         
         $tours = $tourDAO->getAllByNumber($id , $user_id);
         
-        $mikbooked = $worksetDAO->getMikbookedItems($id,$user_id);
+        $item_status = $worksetDAO->getItemStatus($id, $user_id);
         
 //        dump("tours");
 //        dump($tours);
 //        dump("items");
 //        dump($items);
-//        dump("mikbooked");
-//        dump($mikbooked);
+//        dump("status");
+//        dump($item_status);
 //        die;
         
         return $this->render('FirstBundle:Workset:work.html.twig', array(
             'data'      => $items,
             'tours'     => $tours,
-            'mikbooked' => $mikbooked,
+            'status'    => $item_status,
         ));               
     }
     
     public function testAction($id){
+        
+        $user_id = 1;
+        
+        $item_id = 4;
+        
+        $iteration = 1;
+        
+        $itemDAO = $this ->getDoctrine()
+                            ->getManager()
+                            ->getRepository('FirstBundle:Item');   
+        
+        $itemDAO->allFieldItemsDone($item_id, $user_id, $iteration);
+        
+        
+        
+    }
+    
+    public function createNewTourAction(){
         
         $request = Request::createFromGlobals();
         
@@ -97,15 +115,19 @@ class WorksetController extends Controller
         
         $user_id = 1;
         
-        $tourDAO->createTour($iteration, $id, $user_id);
+        $workset_id = 1;
         
-        die;
+        $iteration = $tourDAO->getLastTour($workset_id, $user_id);
         
-//        $items = $worksetDAO->getAllItemsDataByWorksetId($id);
+        $iteration++;
         
-        return $this->render('FirstBundle:Workset:work.html.twig', array(
-            'data'  => $data,
-        ));               
+        $tourDAO->createTour($iteration, $workset_id, $user_id);
+        
+        $url = $this->generateUrl('work_workset', array( //omde la route tel que défini dans routing.yml
+            'id' =>  $workset_id,
+        ));
+        
+        return $this->redirect($url);         
     }
     
     public function createAction()

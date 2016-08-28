@@ -35,7 +35,11 @@ edit_workset:
 delete_workset:
     path:     /workset/delete/{id}
     defaults: { _controller: FirstBundle:Workset:delete }
-
+    
+create_tour:
+    path:     /create/tour
+    defaults: { _controller: FirstBundle:Workset:createNewTour }
+    
 #Fields
 list_field:
     path:     /field
@@ -77,3 +81,11 @@ edit_item:
 delete_item:
     path:     /item/delete/{id}
     defaults: { _controller: FirstBundle:Item:delete }
+    
+mikbook_item:
+    path:     /item/mikbook/
+    defaults: { _controller: FirstBundle:Item:mikbook }
+    
+done_item:
+    path:     /item/done/
+    defaults: { _controller: FirstBundle:Item:done }

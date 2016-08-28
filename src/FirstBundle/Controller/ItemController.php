@@ -161,4 +161,64 @@ class ItemController extends Controller
         ));        
         
     }
+    
+    //fonction dédiée Ajax, pour le mikbookage des items
+    public function mikbookAction(){
+        
+        $request = Request::createFromGlobals();
+
+        if($request->isXmlHttpRequest()){
+            
+                $user_id = 1;
+                
+                $item_id = $request->request->get('item_id', null);
+
+                $itemDAO = $this->getDoctrine()
+                                ->getManager()  
+                                ->getRepository('FirstBundle:Item');
+                
+                $itemDAO->mikbook($item_id, $user_id);
+
+                $json_data= json_encode(array(
+                    'mikbooked' 
+                ));
+
+                $response = new Response($json_data);
+
+                $response->headers->set('Content-Type','application/json');
+
+                return $response; //on utilise pas de template généralement en ajax
+            }        
+    }
+    
+    //fonction dédiée Ajax, pour le mikbookage des items
+    public function doneAction(){
+        
+        $request = Request::createFromGlobals();
+
+        if($request->isXmlHttpRequest()){
+            
+                $user_id = 1;
+                
+                $item_id = $request->request->get('item_id', null);
+                
+                $iteration = $request->request->get('iteration', null);
+
+                $itemDAO = $this->getDoctrine()
+                                ->getManager()  
+                                ->getRepository('FirstBundle:Item');
+                
+                $field_complete = $itemDAO->done($item_id, $iteration, $user_id);
+
+                $json_data= json_encode(
+                    $field_complete 
+                );
+
+                $response = new Response($json_data);
+
+                $response->headers->set('Content-Type','application/json');
+
+                return $response; //on utilise pas de template généralement en ajax
+            }        
+    }
 }

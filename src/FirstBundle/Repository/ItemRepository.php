@@ -16,6 +16,19 @@ class ItemRepository extends EntityRepository
         return $this->findBy(array('field' => $id));
     }
     
+    public function mikbook($item_id, $user_id){
+        
+        $cnx = $this->getEntityManager()->getConnection();
+        
+        $cnx->insert('item_mikbook', array(
+                    'item_id'   => $item_id,
+                    'user_id'  => $user_id,
+                ));
+        
+        return true;
+    }
+
+    //renvoie un booléen décrivant si l'item a été mikbooké par l'utilisateur en param
     public function isMikBooked($id, $user_id){
         
         $qb =   $this   ->getEntityManager()
@@ -32,5 +45,125 @@ class ItemRepository extends EntityRepository
         $result = $query->execute()->fetch();
         
         return $result['count'] > 0;
+    }
+    
+   //met à jour en BD le fait que cet item soit done par l'user, pour l'iteration en paramètre
+    //la valeur de retour est un bololéen qui indique, après modif, si la matière a été terminée pour cette itération après l'ajout de l'item
+    public function done($item_id, $iteration, $user_id){
+        
+        $qb =   $this   ->getEntityManager()
+                        ->getConnection()
+                        ->createQueryBuilder();
+        
+        //on récupère l'ID du tour pour l'itération et l'utilisateur en paramètre
+        $query = $qb->select('id')
+                    ->from('tour')
+                    ->where('iteration = :i')
+                    ->andWhere('user_id = :u')
+                    ->setParameter('i', $iteration)
+                    ->setParameter('u', $user_id);
+        
+        $result = $query    ->execute()
+                            ->fetch();
+        
+        $tour_id = $result['id'];
+        
+        //on set la valeur de done à 1 pôur cet utilisateur et ce tour
+        $query_upd = $qb->update('link_tour_item')
+                        ->set('done', 1)
+                        ->where('tour_id = :t')
+                        ->andWhere('item_id = :i')
+                        ->andWhere('user_id = :u')
+                        ->setParameter('t', $tour_id)
+                        ->setParameter('i', $item_id)
+                        ->setParameter('u', $user_id);
+        
+        $update = $query_upd->execute();
+        
+        $field_id =  $this  ->find($item_id)
+                            ->getField()
+                            ->getId();  
+        
+        //booléen : matière complète
+        $field_done = $this->allFieldItemsDone($item_id, $user_id, $iteration);
+        
+        
+        if($field_done){
+//            dump("done"); die;
+           $this->setItemFieldDone($field_id, $user_id, $tour_id);
+        }
+        
+        return array(
+            'field_id'      => $field_id,
+            'field_done'    => $field_done,
+        );
+                
+    }
+    
+    //renvoie un booléen décrivant si la matière compoertant l'item en paramètre à été terminée par l'utilisateur en param, pour l'iteration en param
+    public function allFieldItemsDone($item_id, $user_id, $iteration){
+        
+        $items_same_field = $this   ->find($item_id)
+                                    ->getField()
+                                    ->getItems();
+
+        //on fix le booléen a TRUE
+        $isFieldComplete = true;
+        
+        //si on trouve un seul item non terminé, on set à FALSE
+        foreach($items_same_field as $i){
+            if(!($this->isDone($i->getId(), $user_id)[$iteration])){
+                $isFieldComplete = false;
+            }
+        }
+        
+        return $isFieldComplete;
+    }
+    
+    //set à done le field comportant l'item en param, pour l'user et le tour passés en param
+    private function setItemFieldDone($field_id, $user_id, $tour_id){
+        
+        $qb =   $this   ->getEntityManager()
+                        ->getConnection()
+                        ->createQueryBuilder();     
+        
+        //on set la valeur de done à 1 pôur cet utilisateur et ce tour
+        $query_upd = $qb->update('link_tour_field')
+                        ->set('done', 1)
+                        ->where('tour_id = :t')
+                        ->andWhere('field_id = :f')
+                        ->andWhere('user_id = :u')
+                        ->setParameter('t', $tour_id)
+                        ->setParameter('f', $field_id)
+                        ->setParameter('u', $user_id);
+
+        $update = $query_upd->execute();        
+        
+    }
+      
+    //renvoie un tableau comportant l'état( done ou non) de l'item en paramètre pour chaque itération présente en base
+    public function isDone($id, $user_id){
+        
+        $outputData = array();
+        
+        $qb =   $this   ->getEntityManager()
+                        ->getConnection()
+                        ->createQueryBuilder();
+        
+        $query  = $qb   ->select('iteration, done')
+                        ->from('view_link_user_item')
+                        ->where('item_id = :i')
+                        ->andWhere('user_id = :u')
+                        ->setParameter('i',$id)
+                        ->setParameter('u',$user_id);
+        
+        $result = $query->execute()->fetchAll();
+        
+        foreach($result as $row){
+            $outputData[$row['iteration']] = ($row['done'] == 1);
+            
+        }
+        
+        return $outputData;
     }
 }

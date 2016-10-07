@@ -1,0 +1,109 @@
+{# Item/Index #}
+
+{% extends "FirstBundle:Layouts:layout.html.twig" %}
+
+{% block title %}
+    Kanban Matiere {{ field.name }}
+    
+{% endblock  %}
+
+{% block content %}
+    
+    <h1>{{ field.name }} - Tour n° {{iteration}}</h1>
+    
+    <br><br>
+
+    <div class="panel col-md-12 container">
+        <div class="row">
+
+            <div class="col-header col-sm-3 kb">
+                Pas encore faits
+            </div>    
+            <div class="col-header col-sm-3 kb">
+                    A faire
+            </div>    
+            <div class="col-header col-sm-3 kb">
+                En Cours
+            </div>    
+            <div class="col-header col-sm-3">
+                Terminés
+            </div>                      
+        </div>        
+        <div class="row">
+{#            NOT DONE#}
+
+            <div class="col-sm-3 column kb">
+
+{#                <div class="scrolly">#}
+
+                    {% for item in items_notdone %}
+                    <div class="row">
+
+                        <div class="square col-sm-8 col-sm-offset-2">
+
+                        [{{item.id}}] &nbsp; {{ item.name }}
+                        </div>
+                    </div>
+                    {% endfor %}
+{#                </div>#}
+            </div>
+{#            TODO#}
+
+            <div class="col-sm-3 column kb">  
+{#                <div class="scrolly">#}
+
+                    {% for item in items_todo %}
+                    <div class="row">
+
+                        <div class="square col-sm-8 col-sm-offset-2">
+
+                        [{{item.id}}] &nbsp; {{ item.name }}
+                        </div>
+                    </div>
+                    {% endfor %}
+{#                </div>                #}
+                
+            </div>
+{#            ONGOING#}
+
+            <div class="col-sm-3 column kb">   
+                
+{#                <div class="scrolly">#}
+
+                    {% for item in items_ongoing %}
+                    <div class="row">
+
+                        <div class="square col-sm-8 col-sm-offset-2">
+
+                        [{{item.id}}] &nbsp; {{ item.name }}
+                        </div>
+                    </div>
+                    {% endfor %}
+{#                </div>                #}
+            </div>
+{#            DONE#}
+
+            <div class="col-sm-3 column" >
+                
+{#                <div class="scrolly">#}
+
+                    {% for item in items_done %}
+                    <div class="row">
+
+                        <div class="square col-sm-8 col-sm-offset-2">
+
+                        [{{item.id}}] &nbsp; {{ item.name }}
+                        </div>
+                    </div>
+                    {% endfor %}
+{#                </div>                #}
+            </div>
+        </div>
+    </div>
+{% endblock  %}
+
+{% block js_scripts %}
+
+
+{% endblock  %}
+

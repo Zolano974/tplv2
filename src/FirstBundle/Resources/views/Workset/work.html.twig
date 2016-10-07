@@ -13,6 +13,8 @@
     
     <div class='row'>
         <div id="data" class="panel col-md-12" >
+            
+            {#      HEADER      #}
             <div class="panel-heading panelH">
                 <h2 class=" panel-title"><big>Liste des Items </big></h2>
 
@@ -23,6 +25,8 @@
                 </button>-->
                                                
             </div>
+            
+             {#      LISTE      #}
             <div class="panel-body" >
                     <!--    #table1    -->
                 <table  id="items_table" class="table-responsive table col-md-12">
@@ -31,13 +35,16 @@
                     {% set field = row.field %}
                     {% set field_nb_tours = row.nb_tours_complete %}
                     
+                    {#      LIGNE MATIERE      #}
                     <tr class="push-top">
-                        <!-- fields list -->
+                        
+                        <!-- CASE DE LA MATIERE-->
                         <th id="mat_{{ field_id }}" class="field_td col-md-12 pointer" onclick="deplier({{field_id}})" style="background-color:{{ field.color }}">
                             <div class="col-md-11">
                                 <span class="col-md-3">{{ field.name }}</span>
                                 <small style="margin-left:5%" id="thumbsups-{{ field_id }}">
                                     
+                                     {#      AFFICHAGE DES POUCES/TOUR      #}
                                     {%for i in 0..field_nb_tours %}
                                         {% if i > 0%}
                                             <span class="glyphicon glyphicon-thumbs-up" ></span>
@@ -48,6 +55,7 @@
                             </div>
                         </th>
                         
+                         {#      AFFICHAGE DES matrices kanban     #}
                         {% for num_tour, tour in tours%}
                             {% if num_tour <= field_nb_tours %}
                                 {% set globe_color = "style=color:#0f4" %}
@@ -55,8 +63,9 @@
                                  {% set globe_color = "" %}
                             {% endif %}
                             {% set globe_html_id = "t-" ~ num_tour ~ "_f-" ~ field_id %}
+                            
                             <th >
-                                <a href="field_kanban?nt=ITERATION&fi=FIELD_ID" class="globe" onclick="openKanban('{{ globe_html_id }}')">
+                                <a href="{{ path('kanban_kanban', {'field_id' : field_id, 'iteration' : num_tour }) }}" class="globe" onclick="openKanban('{{ globe_html_id }}')" >
                                     <span id="{{ globe_html_id }}" 
                                           class="glyphicon glyphicon-th field_{{ field_id }}Xtour_{{ num_tour }}_globe pointer" 
                                           {{ globe_color }}>
@@ -106,7 +115,7 @@
                                 {% set check = check_color %}
                             {% endif %}
                             <td class="check_item subfield-{{ tour[item.id].field_id }}" style="display:none">
-                                <span class="glyphicon glyphicon-pencil pointer" 
+                                <span class="glyphicon glyphicon-pencil pointer"      {#      AFFICHAGE DES matrices kanban     #}
                                       id="chk_t-{{ num_tour }}_i-{{ tour[item.id].item_id }}"   
                                       name="tour_{{ num_tour }}_check" {{ undone }} 
                                       onclick='done({{ num_tour }},{{ tour[item.id].item_id }});'></span>
@@ -151,7 +160,24 @@
         }
         
         function openKanban(html_id){
-            alert('kanban ' + html_id);
+{#            
+            // html_id de la forme : f-$fid_t-$tid
+
+            // on récupère le field_id et l'iteration
+            var iteration = html_id.split('_')[0];
+            var field = html_id.split('_')[1];
+            
+            
+            var it = iteration.split('-')[1];
+            var f_id = field.split('-')[1];
+            
+            //on concatène la route
+            var url = '{{ path('kanban_kanban', {'field_id' : 'field_id', 'iteration' : 'iteration' }) }}';
+            url = url.replace("field_id", f_id); 
+            url = url.replace("iteration", it);                        
+
+            //on fait une redirection (pour l'instant. Plus tard : appel ajx qui popule modal)
+            window.location.href = url;#}
         }
         
         //fonction JS qui coche l'item comme mikbooké en BDD et qui met à jour la vue

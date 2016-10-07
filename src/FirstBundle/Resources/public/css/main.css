@@ -76,3 +76,39 @@
     height: 20px;
 
 }
+
+/* PARTIE DEDIEE AU KANBAN */
+
+.col-header{
+    text-align: center;
+    font-weight: bold;
+    font-size: medium;
+    background-color: #77d5f7;
+/*    background-color: #84c4e2;*/
+}
+
+.square{
+    
+    font-size:smaller;
+    
+    min-width: 80px;
+    min-height: 80px;
+    background-color: #FFF;
+    
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-top: 10px;
+    
+}
+
+.kb{
+    border-right: 1px solid black;
+}
+
+.column{
+    min-height: 400px;
+    max-height: 400px;
+    overflow-y: scroll;
+    background-color: #DBECFD;
+}
+

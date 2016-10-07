@@ -28,6 +28,7 @@ class FieldRepository extends EntityRepository
 
         $qb = $this ->createQueryBuilder('f')
                     ->leftJoin('f.items', 'i')
+                    ->orderBy('f.order')
                     ->addSelect('i');
         
         return $qb->getQuery()->getResult();
@@ -39,6 +40,7 @@ class FieldRepository extends EntityRepository
         $qb = $this ->createQueryBuilder('f')
                     ->leftJoin('f.items', 'i')
                     ->where('f.workset = '.$workset_id)
+                    ->orderBy('f.order')    
                     ->addSelect('i');
         
         return $qb->getQuery()->getResult();
@@ -46,6 +48,11 @@ class FieldRepository extends EntityRepository
     }
     
     public function fetchAllByWorksetId($id){
-        return $this->findBy(array('workset' => $id));
+        
+        $fields =   $this->findBy(  array('workset' => $id),    //condition
+                                    array('order' => 'ASC')     //orderBy
+                                 );
+        
+        return $fields;
     }
 }

@@ -47,6 +47,13 @@ class Field
      */      
     private $items;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="order_custom", type="integer")
+     */
+    private $order;    
+
     
     
 
@@ -128,12 +135,23 @@ class Field
     {
         return $this->workset;
     }
+    
+    
     function getItems() {
         return $this->items;
     }
 
     function setItems($items) {
         $this->items = $items;
+    }
+    
+    
+    function getOrder() {
+        return $this->order;
+    }
+
+    function setOrder($order) {
+        $this->order = $order;
     }
 
 

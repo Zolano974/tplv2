@@ -178,6 +178,8 @@ class ItemController extends Controller
                                 ->getRepository('FirstBundle:Item');
                 
                 $itemDAO->mikbook($item_id, $user_id);
+                
+                //trigger une insertion influxDB
 
                 $json_data= json_encode(array(
                     'mikbooked' 
@@ -188,7 +190,7 @@ class ItemController extends Controller
                 $response->headers->set('Content-Type','application/json');
 
                 return $response; //on utilise pas de template généralement en ajax
-            }        
+        }        
     }
     
     //fonction dédiée Ajax, pour le mikbookage des items
@@ -209,6 +211,8 @@ class ItemController extends Controller
                                 ->getRepository('FirstBundle:Item');
                 
                 $field_complete = $itemDAO->done($item_id, $iteration, $user_id);
+                
+                //trigger une insertion influxDB
 
                 $json_data= json_encode(
                     $field_complete 

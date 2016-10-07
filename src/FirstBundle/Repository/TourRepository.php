@@ -90,12 +90,12 @@ class TourRepository extends EntityRepository
         $id = $cnx->lastInsertId();
         
         //on délègue la suite à INSERTTOURLINKS
-        $this->insertTourLinks($id, $workset_id, $user_id);
+        $this->insertTourLinks($id, $workset_id, $user_id, $iteration);
 
     }
     
     //insère les liens (link_tour_field & link_tour_item) pour un tour en BDD, pour le workset donné
-    private function insertTourLinks($tour_id, $workset_id, $user_id){
+    private function insertTourLinks($tour_id, $workset_id, $user_id, $iteration){
         
         $em = $this->getEntityManager();
         
@@ -105,12 +105,12 @@ class TourRepository extends EntityRepository
         
         foreach($fields as $field) {
             //pour chacun, on délègue la suite a insertLinks()
-            $this->insertLinks($field, $tour_id, $user_id);
+            $this->insertLinks($field, $tour_id, $user_id, $iteration);
         }
     }
     
     //insère le lien entre un tour et un field en BDD
-    private function insertLinks($field, $tour_id, $user_id){
+    private function insertLinks($field, $tour_id, $user_id, $iteration){
         
         $cnx = $this->getEntityManager()->getConnection();
         
@@ -125,12 +125,21 @@ class TourRepository extends EntityRepository
         //on insère un lien entre tour et item pour chaque itzem
         foreach($field->getItems() as $item){
             
+            //on insère la ligne dans outeXitem, bindée au tour id, item_id, user_id
             $cnx    ->insert('link_tour_item', array(
                         'tour_id'   => $tour_id,
                         'item_id'   => $item->getId(),
                         'user_id'   => $user_id,
                         'done'      => 0, //a la création les tours ne sont pas cochés
-                    ));            
+                    ));       
+            
+            //on insere dans kanban_steps, bindée sur item_id, user_id, iteration
+            $cnx    ->insert('kanban_item_step', array(
+                        'item_id'   => $item->getId(),
+                        'iteration' => $iteration,
+                        'user_id'   => $user_id,
+                        'step'      => 0, //a la création les kanban_items sont au step 0
+                    ));              
         }
     }
     

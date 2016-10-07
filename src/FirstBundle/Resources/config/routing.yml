@@ -89,3 +89,9 @@ mikbook_item:
 done_item:
     path:     /item/done/
     defaults: { _controller: FirstBundle:Item:done }
+    
+    
+#Kanban
+kanban_kanban:
+    path:     /kanban/{field_id}/{iteration}
+    defaults: { _controller: FirstBundle:Kanban:kanban }

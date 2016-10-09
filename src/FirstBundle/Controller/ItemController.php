@@ -220,6 +220,7 @@ class ItemController extends Controller {
         }
     }
 
+    //ecrit un point dans influxDB indiquant que cet item a été coché par cet utilisateur à ce moment
     private function markInfluxDBItemDone($item_id, $user_id, $field_id){
         
         $influx = new InfluxClient();
@@ -242,34 +243,31 @@ class ItemController extends Controller {
         
         return $influx->mark($mark_array);
     }
+
     
-//    public function testAction() {
-//
-//
-//        $influx = new InfluxClient();
-//
-//         $mark_array = [
-//            "tags" => [
-//                "item_id" => "1" ,
-//                "field_id" => "2",
-//                "user_id" => "10",
-//            ],
-//            "points" => [
-//                [
-//                    "measurement" => "test",
-//                    "fields"    => [
-//                        "done" => 1,
-//                    ]
-//                ],
-//            ],
-//        ];    
-//        
-//        
-//        $result = $influx->mark($mark_array);
-//        
-//        dump($result); die;
-//    }
-//    
+    //ecrit un point dans influxDB indiquant que cet item a été miknooké par cet utilisateur à ce moment
+    private function markInfluxDBItemMikbooked($item_id, $user_id, $field_id){
+        
+        $influx = new InfluxClient();
+
+        $mark_array = [
+            "tags" => [
+                "item_id" => "$item_id" ,
+                "field_id" => "$field_id",
+                "user_id" => "$user_id",
+            ],
+            "points" => [
+                [
+                    "measurement" => "items_mikbooked",
+                    "fields"    => [
+                        "done" => 1,
+                    ]
+                ],
+            ],
+        ];    
+        
+        return $influx->mark($mark_array);
+    }
 
     public function testAction() {
 

@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 use FirstBundle\Repository\KanbanRepository;
 
+use FirstBundle\Helpers\InfluxDB\InfluxRepository;
+
 use \Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class KanbanController extends Controller
@@ -70,6 +72,11 @@ class KanbanController extends Controller
         if($item_kanban->getStep() == 2){
             //on check l'item à done
             $itemDAO->done($item_id, $iteration, $user_id);
+            
+            $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());
+            
+            //on écrit un point influx dans la collection item_mkb
+            $influxDAO->markInfluxDBItem($item_id, $user_id, $field_id, false);
         }
         
 //        dump($item_kanban); die;

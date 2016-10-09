@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use FirstBundle\Repository\ItemRepository;
 use FirstBundle\Entity\Item;
 use FirstBundle\Form\ItemType;
-use FirstBundle\Helpers\InfluxDB\InfluxDBAdapter as InfluxClient;
+use FirstBundle\Helpers\InfluxDB\InfluxRepository;
 use \Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class ItemController extends Controller {
@@ -158,10 +158,14 @@ class ItemController extends Controller {
         $request = Request::createFromGlobals();
 
         if ($request->isXmlHttpRequest()) {
+            
+            $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());
 
             $user_id = 1;
 
             $item_id = $request->request->get('item_id', null);
+            
+            $field_id = $request->request->get('field_id', null);
 
             $itemDAO = $this->getDoctrine()
                     ->getManager()
@@ -170,6 +174,8 @@ class ItemController extends Controller {
             $itemDAO->mikbook($item_id, $user_id);
 
             //trigger une insertion influxDB
+            //  ici mikbook = true
+            $influx_output = $influxDAO->markInfluxDBItem($item_id, $user_id, $field_id, true);
 
             $json_data = json_encode(array(
                 'mikbooked'
@@ -189,6 +195,8 @@ class ItemController extends Controller {
         $request = Request::createFromGlobals();
 
         if ($request->isXmlHttpRequest()) {
+            
+            $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());
 
             $user_id = 1;
 
@@ -205,12 +213,9 @@ class ItemController extends Controller {
             $field_complete = $itemDAO->done($item_id, $iteration, $user_id);
 
             //trigger une insertion influxDB
-            $influx_output = $this->markInfluxDBItemDone($item_id, $user_id, $field_id);
+            $influx_output = $influxDAO->markInfluxDBItem($item_id, $user_id, $field_id, false);
 
-            $json_data = json_encode([
-                    'field_complete'    => $field_complete,
-                    'influx_output'     => $influx_output,
-            ]);
+            $json_data = json_encode($field_complete);
 
             $response = new Response($json_data);
 
@@ -220,80 +225,14 @@ class ItemController extends Controller {
         }
     }
 
-    //ecrit un point dans influxDB indiquant que cet item a été coché par cet utilisateur à ce moment
-    private function markInfluxDBItemDone($item_id, $user_id, $field_id){
-        
-        $influx = new InfluxClient();
 
-        $mark_array = [
-            "tags" => [
-                "item_id" => "$item_id" ,
-                "field_id" => "$field_id",
-                "user_id" => "$user_id",
-            ],
-            "points" => [
-                [
-                    "measurement" => "items_done",
-                    "fields"    => [
-                        "done" => 1,
-                    ]
-                ],
-            ],
-        ];    
-        
-        return $influx->mark($mark_array);
-    }
 
-    
-    //ecrit un point dans influxDB indiquant que cet item a été miknooké par cet utilisateur à ce moment
-    private function markInfluxDBItemMikbooked($item_id, $user_id, $field_id){
-        
-        $influx = new InfluxClient();
-
-        $mark_array = [
-            "tags" => [
-                "item_id" => "$item_id" ,
-                "field_id" => "$field_id",
-                "user_id" => "$user_id",
-            ],
-            "points" => [
-                [
-                    "measurement" => "items_mikbooked",
-                    "fields"    => [
-                        "done" => 1,
-                    ]
-                ],
-            ],
-        ];    
-        
-        return $influx->mark($mark_array);
-    }
 
     public function testAction() {
 
 
         $influx = new InfluxClient();
 
-
-        $mark_array = [
-            "tags" => [
-                "item_id" => "1",
-                "field_id" => "10",
-                "user_id" => "1",
-            ],
-            "points" => [
-                [
-                    "measurement" => "items_done",
-                    "fields"    => [
-                        "done" => 1,
-                    ]
-                ],
-            ],
-        ];
-        
-        $result = $influx->mark($mark_array);
-        dump("nik");
-        dump($result); die;
     }    
 
 }

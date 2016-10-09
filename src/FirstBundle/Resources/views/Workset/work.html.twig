@@ -172,6 +172,7 @@
                     '{{ path('mikbook_item') }}',
                     {
                         item_id : pitem_id,
+                        field_id: pfield_id
                     }   
             )
             .done(function(data){
@@ -205,12 +206,12 @@
         
 {#                var response = $.parseJSON(data);#}
                 
-                console.log(data.influx_output);
+
                 
                 $("#"+ html_id).hide();
                 $("#"+ html_id+"_ok").show();  
                 
-                if(data.field_complete.field_done){
+                if(data.field_done){
                     $("#thumbsups-"+data.field_id).append('<span class="glyphicon glyphicon-thumbs-up" ></span>');
                     $(".field_"+data.field_id+"Xtour_"+piteration).css('color','#0f4');
                     $(".field_"+data.field_id+"Xtour_"+piteration+'_globe').css('color','#0f4');                    

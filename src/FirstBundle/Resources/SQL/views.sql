@@ -21,3 +21,11 @@ LEFT JOIN link_tour_item li ON li.tour_id = t.id
 RIGHT JOIN item i ON li.item_id = i.id
 LEFT JOIN user u ON u.id = t.user_id
 ORDER BY user_id, iteration
+
+-- SQL VIEW qui regroupe une ligne de jointure pour un item, un tour, le kanban associé, le step, son nom et son état (done ou non)
+CREATE VIEW kanbanXitem AS
+SELECT t.item_id, i.name as item_name, t.iteration, t.field_id , t.user_id, k.step, ti.done
+FROM tourXitem t 
+LEFT JOIN kanban_item_step k ON k.item_id = t.item_id AND k.user_id = t.user_id AND k.iteration = t.iteration 
+LEFT JOIN item i ON t.item_id = i.id 
+LEFT JOIN link_tour_item ti ON t.tour_id = ti.tour_id AND t.user_id = ti.user_id AND t.item_id = ti.item_id

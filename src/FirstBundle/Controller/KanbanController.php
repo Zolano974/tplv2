@@ -44,10 +44,55 @@ class KanbanController extends Controller
             'items_done'        => $items_step[3],
             'field'             => $field,
             'iteration'         => $iteration,
+            'workset_id'        => $field->getWorkset()->getId(),
         ));             
         
+    }
+    
+    //fonction dédiée ajax pour faire avancer un item d'une étape dans le kanban pour un tour donné
+    public function stepupAction($item_id, $iteration, $field_id){
+        
+        $user_id = 1;
+        
+        if($item_id === null || $iteration === null || $field_id === null){
+            throw new NotFoundResourceException();
+        }       
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $itemDAO = $em->getRepository('FirstBundle:Item');
+        $kanbanDAO = $em->getRepository('FirstBundle:Kanban');
+        
+        //on incrément l'étape de l'item dans le kanban
+        $item_kanban = $kanbanDAO->stepUp($item_id, $iteration, $user_id);
+        
+        //si l'item est au step final
+        if($item_kanban->getStep() == 2){
+            //on check l'item à done
+            $itemDAO->done($item_id, $iteration, $user_id);
+        }
+        
+//        dump($item_kanban); die;
+        
+        try{
+           $em->persist($item_kanban);
+           
+           $em->flush();
+           
+        } catch (Exception $ex) {
+            dump($ex); die;
+        }
+
+        
+        $url = $this->generateUrl('kanban_kanban', array( 
+            'field_id' =>  $field_id,
+            'iteration' =>  $iteration,
+        ));        
+        
+        return $this->redirect($url);
         
         
+                
     }
     
     private function groupItemsBySteps($items){

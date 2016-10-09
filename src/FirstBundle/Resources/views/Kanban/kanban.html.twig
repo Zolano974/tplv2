@@ -1,7 +1,7 @@
 {# Item/Index #}
 
 {% extends "FirstBundle:Layouts:layout.html.twig" %}
-
+    
 {% block title %}
     Kanban Matiere {{ field.name }}
     
@@ -11,99 +11,101 @@
     
     <h1>{{ field.name }} - Tour n° {{iteration}}</h1>
     
-    <br><br>
+    <div class="row">
+        <div class="col-sm-offset-10">
+
+            
+                <a href="{{ path('work_workset', {'id' : workset_id }) }}">
+                   Retour liste items
+                </a>
+            
+        </div>
+    </div>
 
     <div class="panel col-md-12 container">
         <div class="row">
 
-            <div class="col-header col-sm-3 kb">
+            <div class="col-header col-sm-4 kb">
                 Pas encore faits
             </div>    
-            <div class="col-header col-sm-3 kb">
-                    A faire
+            <div class="col-header col-sm-4 kb">
+                A faire
             </div>    
-            <div class="col-header col-sm-3 kb">
-                En Cours
-            </div>    
-            <div class="col-header col-sm-3">
+            <div class="col-header col-sm-4 ">
                 Terminés
-            </div>                      
+            </div>                        
         </div>        
         <div class="row">
 {#            NOT DONE#}
 
-            <div class="col-sm-3 column kb">
+            <div class="col-sm-4 column kb">
 
 {#                <div class="scrolly">#}
 
                     {% for item in items_notdone %}
                     <div class="row">
 
-                        <div class="square col-sm-8 col-sm-offset-2">
+                        <a href="{{ path('kanban_stepup', {'item_id' : item.id, 'iteration' : iteration, 'field_id' : field.id }) }}">
+                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}')">
 
-                        [{{item.id}}] &nbsp; {{ item.name }}
-                        </div>
+                                
+                                [{{item.id}}] &nbsp; {{ item.name }}
+                            </div>
+                        </a>
                     </div>
                     {% endfor %}
 {#                </div>#}
             </div>
 {#            TODO#}
 
-            <div class="col-sm-3 column kb">  
+            <div class="col-sm-4 column kb">  
 {#                <div class="scrolly">#}
 
                     {% for item in items_todo %}
                     <div class="row">
 
-                        <div class="square col-sm-8 col-sm-offset-2">
+                        <a href="{{ path('kanban_stepup', {'item_id' : item.id, 'iteration' : iteration, 'field_id' : field.id }) }}">
+                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}')">
 
-                        [{{item.id}}] &nbsp; {{ item.name }}
-                        </div>
+                                
+                                [{{item.id}}] &nbsp; {{ item.name }}
+                            </div>
+                        </a>
                     </div>
                     {% endfor %}
 {#                </div>                #}
                 
             </div>
-{#            ONGOING#}
+{#            DONE#}
 
-            <div class="col-sm-3 column kb">   
+            <div class="col-sm-4 column ">   
                 
 {#                <div class="scrolly">#}
 
                     {% for item in items_ongoing %}
                     <div class="row">
 
-                        <div class="square col-sm-8 col-sm-offset-2">
+{#                        <a href="{{ path('kanban_stepup', {'item_id' : item.id, 'iteration' : iteration, 'field_id' : field.id }) }}">#}
+                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}')">
 
-                        [{{item.id}}] &nbsp; {{ item.name }}
-                        </div>
+                                
+                                [{{item.id}}] &nbsp; {{ item.name }}
+                            </div>
+{#                        </a>#}
                     </div>
                     {% endfor %}
 {#                </div>                #}
             </div>
-{#            DONE#}
-
-            <div class="col-sm-3 column" >
-                
-{#                <div class="scrolly">#}
-
-                    {% for item in items_done %}
-                    <div class="row">
-
-                        <div class="square col-sm-8 col-sm-offset-2">
-
-                        [{{item.id}}] &nbsp; {{ item.name }}
-                        </div>
-                    </div>
-                    {% endfor %}
-{#                </div>                #}
-            </div>
-        </div>
     </div>
 {% endblock  %}
 
 {% block js_scripts %}
 
-
+    <script type="text/javascript">
+        function stepUp(item_id, iteration){
+            
+            console.log('item ' + item_id + ' iteration ' + iteration);
+        }
+    </script>
 {% endblock  %}
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Field
  *
- * @ORM\Table(name="field")
+ * @ORM\Table(name="kanban_item_step")
  * @ORM\Entity(repositoryClass="FirstBundle\Repository\KanbanRepository")
  */
 class Kanban

@@ -8,9 +8,9 @@ first_say:
 
 #Worksets 
 
-test:
-    path:     /test/{id}
-    defaults: { _controller: FirstBundle:Workset:test }
+#test:
+#    path:     /test/{id}
+#    defaults: { _controller: FirstBundle:Workset:test }
 
 work_workset:
     path:     /workset/work/{id}
@@ -90,8 +90,16 @@ done_item:
     path:     /item/done/
     defaults: { _controller: FirstBundle:Item:done }
     
+test:
+    path:     /item/test/
+    defaults: { _controller: FirstBundle:Item:test }
+    
     
 #Kanban
 kanban_kanban:
     path:     /kanban/{field_id}/{iteration}
     defaults: { _controller: FirstBundle:Kanban:kanban }
+    
+kanban_stepup:
+    path:     /kanban/stepup/{item_id}/{iteration}/{field_id}
+    defaults: { _controller: FirstBundle:Kanban:stepup }

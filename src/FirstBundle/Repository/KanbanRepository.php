@@ -23,78 +23,65 @@ class KanbanRepository extends EntityRepository
                     ->getConnection()
                     ->createQueryBuilder();
         
-        $query = $qb->select('t.item_id, i.name as item_name, t.iteration, t.user_id, k.step')
-                    ->from('tourXitem', 't')
-                    ->where('t.field_id = :f_id')
-                    ->andWhere('t.iteration = :it')
-                    ->andWhere(' t.user_id = :u_id')
-                    ->leftJoin('t','kanban_item_step', 'k', 'k.item_id = t.item_id AND k.user_id = t.user_id AND k.iteration = t.iteration')
-                    ->leftJoin('t','item', 'i', 't.item_id = i.id')
-                    ->setParameter('f_id', $field_id)
-                    ->setParameter('it', $iteration)
-                    ->setParameter('u_id', $user_id);
+//        $query = $qb->select('t.item_id, i.name as item_name, t.iteration, t.user_id, k.step, ti.done, t.field_id')
+//                    ->from('tourXitem', 't')
+////                    ->where('t.field_id = :f_id')
+////                    ->andWhere('t.iteration = :it')
+////                    ->andWhere(' t.user_id = :u_id')
+//                    ->leftJoin('t','kanban_item_step', 'k', 'k.item_id = t.item_id AND k.user_id = t.user_id AND k.iteration = t.iteration')
+//                    ->leftJoin('t','item', 'i', 't.item_id = i.id')
+//                    ->leftJoin('t','link_tour_item', 'ti', 't.tour_id = ti.tour_id AND t.user_id = ti.user_id AND t.item_id = ti.item_id')
+//                    ->setParameter('f_id', $field_id)
+//                    ->setParameter('it', $iteration)
+//                    ->setParameter('u_id', $user_id)
+//                    ;
+        
+        $query =    $qb ->select('item_id, item_name, iteration, user_id, step, done')
+                        ->from('kanbanXitem')
+                        ->where('field_id = :f_id')
+                        ->andWhere('iteration = :it')
+                        ->andWhere(' user_id = :u_id')    
+                        ->setParameter('f_id', $field_id)
+                        ->setParameter('it', $iteration)
+                        ->setParameter('u_id', $user_id);                
+                        
         
 //        dump($query->getSQL());die;
         
         $result = $qb   ->execute()
                         ->fetchAll();
         
-        return $result;
+        $output = [];
         
-    }
-    
-    public function fetchOneWithFields($id){
-
-        $qb = $this ->createQueryBuilder('w')
-                    ->leftJoin('w.fields', 'f')
-                    ->where('w.id = ' . $id)
-                    ->addSelect('f');
-        
-        return $qb->getQuery()->getResult()[0];
-     
-    }
-    
-    public function fetchAllWithFields(){
-
-        $qb = $this ->createQueryBuilder('w')
-                    ->leftJoin('w.fields', 'f')
-                    ->addSelect('f');
-        
-        return $qb->getQuery()->getResult();
-     
-    }
-    
-    
-    public function getItemStatus($workset_id, $user_id){
-        
-        $outputData = array();
-        
-        $fieldRepository = $this->getEntityManager()->getRepository('FirstBundle:Field');
-        $itemRepository = $this->getEntityManager()->getRepository('FirstBundle:Item');        
-        
-        $fields = $fieldRepository->fetchAllByWorksetId($workset_id);
-        
-        foreach($fields as $field){
-            foreach($field->getItems() as $item){
-                $outputData[$item->getId()]['mikbook'] = $itemRepository->isMikBooked($item->getId(), $user_id);
-                $outputData[$item->getId()]['done'] = $itemRepository->isDone($item->getId(), $user_id);
-            }
+        foreach($result as $row){
+            
+            if($row['done'] == '1') $row['step'] = 2;
+            
+            $output[] = $row;
         }
         
-        return $outputData;        
+        return $output;
+        
     }
-   
  
+   
+    public function stepUp($item_id, $iteration, $user_id){
+        
+        $item_kanban = $this->findBy(array(
+                                            'item_id' => $item_id,
+                                            'iteration' => $iteration,
+                                            'user_id' => $user_id,
+        ));
+        
+        $item = $item_kanban[0];
+
+        //le step 3 est le dernier
+        if($item->getStep() < 2){
+            $item->setStep($item->getStep() + 1);
+        }
+        
+        return $item;
+        
+    }
 }
 
-
-//        
-//    $qb = $this->createQueryBuilder('a');
-//
-//    // On fait une jointure avec l'entité Categorie, avec pour alias « c »
-//    $qb ->join('a.categories', 'c')
-//        ->where($qb->expr()->in('c.nom', $nom_categories)); // Puis on filtre sur le nom des catégories à l'aide d'un IN
-//
-//    // Enfin, on retourne le résultat
-//    return $qb->getQuery()
-//              ->getResult();   

@@ -84,10 +84,14 @@
     font-weight: bold;
     font-size: medium;
     background-color: #77d5f7;
+    padding-top: 10px;
+    padding-bottom:  10px;
 /*    background-color: #84c4e2;*/
 }
 
 .square{
+    
+    cursor : pointer !important;
     
     font-size:smaller;
     

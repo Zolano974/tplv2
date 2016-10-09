@@ -87,9 +87,9 @@ class ItemRepository extends EntityRepository
         //booléen : matière complète
         $field_done = $this->allFieldItemsDone($item_id, $user_id, $iteration);
         
-        
+        //si la matière est complète
         if($field_done){
-//            dump("done"); die;
+//         //on inssère cette info en DB
            $this->setItemFieldDone($field_id, $user_id, $tour_id);
         }
         
@@ -166,4 +166,5 @@ class ItemRepository extends EntityRepository
         
         return $outputData;
     }
+    
 }

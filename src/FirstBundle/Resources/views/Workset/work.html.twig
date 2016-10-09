@@ -65,7 +65,7 @@
                             {% set globe_html_id = "t-" ~ num_tour ~ "_f-" ~ field_id %}
                             
                             <th >
-                                <a href="{{ path('kanban_kanban', {'field_id' : field_id, 'iteration' : num_tour }) }}" class="globe" onclick="openKanban('{{ globe_html_id }}')" >
+                                <a href="{{ path('kanban_kanban', {'field_id' : field_id, 'iteration' : num_tour }) }}" class="globe">
                                     <span id="{{ globe_html_id }}" 
                                           class="glyphicon glyphicon-th field_{{ field_id }}Xtour_{{ num_tour }}_globe pointer" 
                                           {{ globe_color }}>
@@ -118,7 +118,7 @@
                                 <span class="glyphicon glyphicon-pencil pointer"      {#      AFFICHAGE DES matrices kanban     #}
                                       id="chk_t-{{ num_tour }}_i-{{ tour[item.id].item_id }}"   
                                       name="tour_{{ num_tour }}_check" {{ undone }} 
-                                      onclick='done({{ num_tour }},{{ tour[item.id].item_id }});'></span>
+                                      onclick='done({{ num_tour }},{{ tour[item.id].item_id }},{{ field_id }});'></span>
 
                                 <span id="chk_t-{{ num_tour }}_i-{{ tour[item.id].item_id }}_ok" 
                                       class="glyphicon glyphicon-ok-sign field_{{ tour[item.id].field_id }}Xtour_{{ num_tour }} itemdone" 
@@ -158,27 +158,7 @@
         function deplier(field_id){
             $('.subfield-'+field_id).toggle();
         }
-        
-        function openKanban(html_id){
-{#            
-            // html_id de la forme : f-$fid_t-$tid
 
-            // on récupère le field_id et l'iteration
-            var iteration = html_id.split('_')[0];
-            var field = html_id.split('_')[1];
-            
-            
-            var it = iteration.split('-')[1];
-            var f_id = field.split('-')[1];
-            
-            //on concatène la route
-            var url = '{{ path('kanban_kanban', {'field_id' : 'field_id', 'iteration' : 'iteration' }) }}';
-            url = url.replace("field_id", f_id); 
-            url = url.replace("iteration", it);                        
-
-            //on fait une redirection (pour l'instant. Plus tard : appel ajx qui popule modal)
-            window.location.href = url;#}
-        }
         
         //fonction JS qui coche l'item comme mikbooké en BDD et qui met à jour la vue
         function mikbook(pitem_id, pfield_id){   
@@ -206,8 +186,9 @@
             
         }
         
-        function done(piteration, pitem_id){
+        function done(piteration, pitem_id, pfield_id){
             
+            console.log('field ' + pfield_id);
             
             var html_id = "chk_t-" + piteration + "_i-" + pitem_id;
             
@@ -216,19 +197,20 @@
                     '{{ path('done_item') }}',
                     {
                         item_id : pitem_id,
-                        iteration : piteration
+                        iteration : piteration,
+                        field_id : pfield_id
                     }   
             )
             .done(function(data){ //field_complete
         
 {#                var response = $.parseJSON(data);#}
                 
-                console.log(data);
+                console.log(data.influx_output);
                 
                 $("#"+ html_id).hide();
                 $("#"+ html_id+"_ok").show();  
                 
-                if(data.field_done){
+                if(data.field_complete.field_done){
                     $("#thumbsups-"+data.field_id).append('<span class="glyphicon glyphicon-thumbs-up" ></span>');
                     $(".field_"+data.field_id+"Xtour_"+piteration).css('color','#0f4');
                     $(".field_"+data.field_id+"Xtour_"+piteration+'_globe').css('color','#0f4');                    

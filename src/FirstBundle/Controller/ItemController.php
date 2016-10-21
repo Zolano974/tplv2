@@ -8,8 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 use FirstBundle\Repository\ItemRepository;
 use FirstBundle\Entity\Item;
 use FirstBundle\Form\ItemType;
-use FirstBundle\Helpers\InfluxDB\InfluxRepository;
+//use FirstBundle\Helpers\InfluxDB\InfluxRepository;
 use \Symfony\Component\Translation\Exception\NotFoundResourceException;
+
+use Zolano\FluxinBundle\Repository\InfluxRepository;
 
 class ItemController extends Controller {
 
@@ -159,8 +161,6 @@ class ItemController extends Controller {
 
         if ($request->isXmlHttpRequest()) {
             
-            $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());
-
             $user_id = 1;
 
             $item_id = $request->request->get('item_id', null);
@@ -175,7 +175,7 @@ class ItemController extends Controller {
 
             //trigger une insertion influxDB
             //  ici mikbook = true
-            $influx_output = $influxDAO->markInfluxDBItem($item_id, $user_id, $field_id, true);
+            $influx_output = $itemDAO->markInfluxDBItem($item_id, $user_id, $field_id, true);
 
             $json_data = json_encode(array(
                 'mikbooked'
@@ -194,9 +194,7 @@ class ItemController extends Controller {
 
         $request = Request::createFromGlobals();
 
-        if ($request->isXmlHttpRequest()) {
-            
-            $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());
+//        if ($request->isXmlHttpRequest()) {
 
             $user_id = 1;
 
@@ -213,7 +211,7 @@ class ItemController extends Controller {
             $field_complete = $itemDAO->done($item_id, $iteration, $user_id);
 
             //trigger une insertion influxDB
-            $influx_output = $influxDAO->markInfluxDBItem($item_id, $user_id, $field_id, false);
+            $influx_output = $itemDAO->markInfluxDBItem($item_id, $user_id, $field_id, false);
 
             $json_data = json_encode($field_complete);
 
@@ -222,16 +220,39 @@ class ItemController extends Controller {
             $response->headers->set('Content-Type', 'application/json');
 
             return $response; //on utilise pas de template généralement en ajax
-        }
+//        }
+    }
+
+    public function fetchItemsDoneInfluxData($begin, $end, $user_id, $field_id = null){
+        
     }
 
 
 
-
     public function testAction() {
+        
+        $config = array(
+            'idb_user'      => 'zolano',
+            'idb_pwd'       => 'zolano',
+            'idb_host'      => 'localhost',
+            'idb_dbname'    => 'test',    
+        );
+        
+        $influx = new InfluxRepository( $this->getDoctrine()->getManager(), $config);
+        
+        $data = $influx->selectAllFrom("test", "items_done");
+        
+        dump($data);
+        dump($influx);die;
 
 
-        $influx = new InfluxClient();
+//        $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());
+//        
+//        $brute_data_done    = $influxDAO->getItemsDoneAggregate( '2016-10-07T00:00:00Z', 'now()', -1, 'day');
+//        $brute_data_mkb     = $influxDAO->getItemsMkbAggregate( '2016-10-07T00:00:00Z', 'now()', -1, 'day');
+//        
+//        dump($brute_data_done);
+//        dump($brute_data_mkb); die;
 
     }    
 

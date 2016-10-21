@@ -83,17 +83,19 @@ class WorksetController extends Controller
     
     public function testAction($id){
         
-        $user_id = 1;
+        dump("zob");die;
         
-        $item_id = 4;
-        
-        $iteration = 1;
-        
-        $itemDAO = $this ->getDoctrine()
-                            ->getManager()
-                            ->getRepository('FirstBundle:Item');   
-        
-        $itemDAO->allFieldItemsDone($item_id, $user_id, $iteration);
+//        $user_id = 1;
+//        
+//        $item_id = 4;
+//        
+//        $iteration = 1;
+//        
+//        $itemDAO = $this ->getDoctrine()
+//                            ->getManager()
+//                            ->getRepository('FirstBundle:Item');   
+//        
+//        $itemDAO->allFieldItemsDone($item_id, $user_id, $iteration);
         
         
         

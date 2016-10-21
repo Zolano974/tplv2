@@ -9,8 +9,8 @@ first_say:
 #Worksets 
 
 #test:
-#    path:     /test/{id}
-#    defaults: { _controller: FirstBundle:Workset:test }
+    path:     /test
+    defaults: { _controller: FirstBundle:Workset:test }
 
 work_workset:
     path:     /workset/work/{id}

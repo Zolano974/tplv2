@@ -3,7 +3,7 @@
 namespace FirstBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-
+use Zolano\FluxinBundle\Repository\InfluxRepository;
 /**
  * ItemRepository
  *
@@ -165,6 +165,174 @@ class ItemRepository extends EntityRepository
         }
         
         return $outputData;
+    }
+    
+    ############# FONCTIONS LIEES A INFLUXDB ###########"""
+    
+        //
+    /**
+     * Renvoie l'agrégation des items cochés, granularité en paramètre
+     *
+     * @param FieldId           $field_id       The ID of the field wanted. -1 means global
+     * @param Begin             $begin          The beginning of the period wanted. Expected format : timestamp ( on Z ?)
+     * @param End               $end            The end of the period wanted. Expected format : timestamp ( on Z ?)
+     * @param Aggreg            $aggreg         The granularity wanted : ENUM ( (hour, day, week, month)
+     */        
+    public function getItemsDoneAggregate($begin, $end, $field_id = -1, $aggreg = 'hour'){
+        
+        $agregation = "";
+        
+        switch($aggreg){
+            case 'hour' :
+    
+                $agregation = '1h';
+                break;
+            case 'day' :
+         
+                $agregation = '1d';
+                break;
+            case 'week' :
+  
+                $agregation = '1w';
+                break;
+            case 'month' :
+  
+                $agregation = '4w';
+                break;
+
+        }
+
+        
+        //on crée la condition sur matiere uniquement si différent de -1
+        $where_condition = ($field_id == -1) ? "" : "field_id = '$field_id' GROUP BY time($agregation)";
+        
+        $influx = $this->getInfluxRepository();
+        
+        $database = "test";
+        
+        $data = $influx->selectMetrics("count(done)", "items_done", $begin, $end, $where_condition, $database);
+        
+        return $data;
+        
+    }
+    
+     //
+    /**
+     * Renvoie la data des items cochés/mikbookés
+     *
+     * @param UserID            $user_id        The ID of the field wanted. -1 means global
+     * @param FieldId           $field_id       The ID of the field wanted. -1 means global
+     * @param Begin             $begin          The beginning of the period wanted. Expected format : timestamp ( on Z ?)
+     * @param End               $end            The end of the period wanted. Expected format : timestamp ( on Z ?)
+     * @param Mikbook           $mikbook        true : items mikbookés /  false : items cochés
+     */       
+    public function fetchItemsInfluxData($user_id, $begin = null, $end = null, $mikbook = false, $field_id = null, $aggreg = 'day'){
+        
+
+            $series = array();
+
+            //on assure les valeurs de BEGIN et END
+            $date = date("Y-m-d");
+    //        $last_week = date("Y-m-d",mktime(0,0,0,date("m"), date("d")-7, date("Y")));
+            $last_month = date("Y-m-d",mktime(0,0,0,date("m")-1, date("d"), date("Y")));
+
+            if($begin === null){ $begin = $last_month; }
+            if($end === null){ $end = $date; }        
+            
+            $data = ($mikbook) ? $this->getItemsMkbAggregate($begin, $end, $user_id, $field_id, $aggreg) : $this->getItemsDoneAggregate($begin, $end, $user_id, $field_id, $aggreg) ;
+            
+            return $data;
+    }
+    
+    //
+    /**
+     * Renvoie l'agrégation des items miknookés, granularité en paramètre
+     *
+     * @param FieldId           $field_id       The ID of the field wanted. -1 means global
+     * @param Begin             $begin          The beginning of the period wanted. Expected format : timestamp ( on Z ?)
+     * @param End               $end            The end of the period wanted. Expected format : timestamp ( on Z ?)
+     * @param Aggreg            $aggreg         The granularity wanted : ENUM ( (hour, day, week, month)
+     */        
+    public function getItemsMkbAggregate($begin, $end, $user_id, $field_id = -1, $aggreg = 'hour'){
+        
+        $agregation = "";
+        
+        switch($aggreg){
+            case 'hour' :
+    
+                $agregation = '1h';
+                break;
+            case 'day' :
+         
+                $agregation = '1d';
+                break;
+            case 'week' :
+  
+                $agregation = '1w';
+                break;
+            case 'month' :
+  
+                $agregation = '4w';
+                break;
+
+        }
+        
+        $begin = "'$begin'";
+        if($end != 'now()') $end = "'$end' GROUP BY time($agregation)";
+
+        
+        //on crée la condition sur matiere uniquement si différent de -1
+        $where_condition = ($field_id == -1) ? "" : " AND field_id = '$field_id'";
+        
+        $influx = $this->getInfluxRepository();
+        
+        $database = "test";
+        
+        $data = $influx->selectMetrics("count(done)","items_mkb", $begin, $end, $where_condition, $database);
+        
+        return $data;
+        
+    }    
+    
+    //
+    /**
+     * Ecrit un point dans influxDB 
+     *
+     * @param ItemId            $item_id        The ID of the item to be written
+     * @param UserId            $user_id        The bID of the user to be written
+     * @param FieldId           $field_id       The bID of the field to be written
+     * @param Mkb               $mkb            Wether the item has benn mikbooked TRUE or done FALSE
+     */      
+    public function markInfluxDBItem($item_id, $user_id, $field_id, $mkb = false){
+
+        $mark_array = [
+            "tags" => [
+                "item_id" => "$item_id" ,
+                "field_id" => "$field_id",
+                "user_id" => "$user_id",
+            ],
+            "points" => [
+                [
+                    "measurement" => ($mkb) ? "items_mkb" : "items_done",
+                    "fields"    => [
+                        "done" => 1,
+                    ]
+                ],
+            ],
+        ];    
+        
+        $influx = $this->getInfluxRepository();    
+
+        return $influx->mark($mark_array);
+    }        
+        
+    
+    
+    private function getInfluxRepository(){
+        
+       return  new InfluxRepository($this->getEntityManager());
+        
+         
     }
     
 }

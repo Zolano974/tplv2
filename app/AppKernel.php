@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new RvzBundle\RvzBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Symfony\Bundle\DebugBundle\DebugBundle(),
+            new Zolano\FluxinBundle\InfluxBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

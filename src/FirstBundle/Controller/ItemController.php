@@ -231,19 +231,20 @@ class ItemController extends Controller {
 
     public function testAction() {
         
-        $config = array(
-            'idb_user'      => 'zolano',
-            'idb_pwd'       => 'zolano',
-            'idb_host'      => 'localhost',
-            'idb_dbname'    => 'test',    
-        );
+        $itemDAO = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('FirstBundle:Item');
         
-        $influx = new InfluxRepository( $this->getDoctrine()->getManager(), $config);
+        $begin = "2016-10-01";
+        $end = "2016-10-22";
+        $user_id = 1;
+        $mikbook = false;
+        $field_id = null;
+        $aggreg = "day";
         
-        $data = $influx->selectAllFrom("test", "items_done");
+        $data = $itemDAO->fetchItemsInfluxData($user_id, $begin, $end, $mikbook, $field_id, $aggreg);
         
-        dump($data);
-        dump($influx);die;
+        dump($data);die;
 
 
 //        $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());

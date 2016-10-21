@@ -168,55 +168,8 @@ class ItemRepository extends EntityRepository
     }
     
     ############# FONCTIONS LIEES A INFLUXDB ###########"""
-    
-        //
-    /**
-     * Renvoie l'agrégation des items cochés, granularité en paramètre
-     *
-     * @param FieldId           $field_id       The ID of the field wanted. -1 means global
-     * @param Begin             $begin          The beginning of the period wanted. Expected format : timestamp ( on Z ?)
-     * @param End               $end            The end of the period wanted. Expected format : timestamp ( on Z ?)
-     * @param Aggreg            $aggreg         The granularity wanted : ENUM ( (hour, day, week, month)
-     */        
-    public function getItemsDoneAggregate($begin, $end, $field_id = -1, $aggreg = 'hour'){
-        
-        $agregation = "";
-        
-        switch($aggreg){
-            case 'hour' :
-    
-                $agregation = '1h';
-                break;
-            case 'day' :
-         
-                $agregation = '1d';
-                break;
-            case 'week' :
-  
-                $agregation = '1w';
-                break;
-            case 'month' :
-  
-                $agregation = '4w';
-                break;
 
-        }
-
-        
-        //on crée la condition sur matiere uniquement si différent de -1
-        $where_condition = ($field_id == -1) ? "" : "field_id = '$field_id' GROUP BY time($agregation)";
-        
-        $influx = $this->getInfluxRepository();
-        
-        $database = "test";
-        
-        $data = $influx->selectMetrics("count(done)", "items_done", $begin, $end, $where_condition, $database);
-        
-        return $data;
-        
-    }
-    
-     //
+    //
     /**
      * Renvoie la data des items cochés/mikbookés
      *
@@ -237,9 +190,9 @@ class ItemRepository extends EntityRepository
             $last_month = date("Y-m-d",mktime(0,0,0,date("m")-1, date("d"), date("Y")));
 
             if($begin === null){ $begin = $last_month; }
-            if($end === null){ $end = $date; }        
+            if($end === null){ $end = $date; }
             
-            $data = ($mikbook) ? $this->getItemsMkbAggregate($begin, $end, $user_id, $field_id, $aggreg) : $this->getItemsDoneAggregate($begin, $end, $user_id, $field_id, $aggreg) ;
+            $data = $this->getItemsAggregate($begin, $end, $user_id, $field_id, $aggreg, $mikbook) ;
             
             return $data;
     }
@@ -252,10 +205,11 @@ class ItemRepository extends EntityRepository
      * @param Begin             $begin          The beginning of the period wanted. Expected format : timestamp ( on Z ?)
      * @param End               $end            The end of the period wanted. Expected format : timestamp ( on Z ?)
      * @param Aggreg            $aggreg         The granularity wanted : ENUM ( (hour, day, week, month)
+     * @param Mkb              $mkb            Either we fetch DONE or MIKBOOKED items
      */        
-    public function getItemsMkbAggregate($begin, $end, $user_id, $field_id = -1, $aggreg = 'hour'){
+    public function getItemsAggregate($begin, $end, $user_id, $field_id = -1, $aggreg = 'hour', $mkb = false){
         
-        $agregation = "";
+        $agregation = "day";
         
         switch($aggreg){
             case 'hour' :
@@ -277,22 +231,24 @@ class ItemRepository extends EntityRepository
 
         }
         
-        $begin = "'$begin'";
-        if($end != 'now()') $end = "'$end' GROUP BY time($agregation)";
-
+        $collection = ($mkb) ? "item_mkb" : "items_done" ;
         
         //on crée la condition sur matiere uniquement si différent de -1
-        $where_condition = ($field_id == -1) ? "" : " AND field_id = '$field_id'";
+        $where_condition = ($field_id == null) ? "" : " AND field_id = '$field_id'";
+        
+        $groupby =  " GROUP BY time($agregation)";
         
         $influx = $this->getInfluxRepository();
         
         $database = "test";
         
-        $data = $influx->selectMetrics("count(done)","items_mkb", $begin, $end, $where_condition, $database);
+        $data = $influx->selectMetrics("count(done)", $collection, $begin, $end, $where_condition, $groupby, $database);
         
         return $data;
         
     }    
+    
+
     
     //
     /**
@@ -327,7 +283,10 @@ class ItemRepository extends EntityRepository
     }        
         
     
-    
+    /** Instancie un Influxrepository
+     * 
+     * @return InfluxRepository
+     */
     private function getInfluxRepository(){
         
        return  new InfluxRepository($this->getEntityManager());

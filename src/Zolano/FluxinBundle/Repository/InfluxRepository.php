@@ -111,18 +111,27 @@ class InfluxRepository{
      * @return mixed
      */
     //select * from stats_Cecosane where time < '2016-05-01T00:00:00Z' AND time  > '2016-02-03T00:00:00Z' AND kpi_id = '133'
-    public function selectMetrics($fields, $collection,  $begin, $end, $where = "",$database = null){
+    public function selectMetrics($fields, $collection,  $begin, $end, $where = "", $groupby = "", $database = null){
         
         if($database === null) $database = $this->config['idb_dbname'];
+//        
+//        dump($begin);
+//        dump($end);
         
         
          //on retire le décalage avec GMT aux bornes temporelles pour bien avoir les données de minuit à minuit
         $begin = $this->addGMToffset($begin . " 00:00:00", true);
-        $end = $this->addGMToffset($end . " 00:00:00", true);                
+        $end = $this->addGMToffset($end . " 00:00:00", true);
+//        
+//        dump("addGMToffset");
+//        dump($begin);
+//        dump($end);
 
         $where_condition = ($where !== "") ? " AND $where" : "" ;
 
-        $query = "SELECT $fields FROM $collection WHERE time > '$begin' AND time < '$end' $where_condition";
+        $query = "SELECT $fields FROM $collection WHERE time > '$begin' AND time <= '$end' $where_condition $groupby";
+        
+        dump($query);
 
         return $this->selectQueryFromDatabase($database, $query);
     }
@@ -503,16 +512,18 @@ class InfluxRepository{
     private function addGMToffset($date, $remove = false){
 
         //on récupère le décalage GMT
-        $decalage = date('P');
-        $dec_hm = explode('+',$decalage)[1];
-        $dec_h =  substr($dec_hm, 0, -3);
-        $int_dec_h = intval($dec_h);
+        $decalage = date('P');                      //dump($decalage);
+        $dec_hm = explode('+',$decalage)[1];        //dump($dec_hm);
+        $dec_h =  substr($dec_hm, 0, -3);           //dump($dec_h);
+        $int_dec_h = intval($dec_h);                //dump($int_dec_h);
         //on ,passe en timestamp
-        $timestamp = strtotime($date);
+        $timestamp = strtotime($date);              //dump($timestamp);
         //on ajoute (ou retranche) l'offset au timestamp
         $timestamp = (!$remove) ? $timestamp + $int_dec_h * 60 * 60 : $timestamp - $int_dec_h * 60 * 60 ;
+                                                    //dump($timestamp);
         //on formatte la date au format d'output
         $date_offset = date('Y-m-d H:i:s', $timestamp);
+                                                    //dump($date_offset);
 
         return $date_offset;
     }

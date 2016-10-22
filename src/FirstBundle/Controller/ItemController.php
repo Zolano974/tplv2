@@ -165,6 +165,8 @@ class ItemController extends Controller {
 
             $item_id = $request->request->get('item_id', null);
             
+            $workset_id = $request->request->get('workset_id', null);
+            
             $field_id = $request->request->get('field_id', null);
 
             $itemDAO = $this->getDoctrine()
@@ -175,7 +177,7 @@ class ItemController extends Controller {
 
             //trigger une insertion influxDB
             //  ici mikbook = true
-            $influx_output = $itemDAO->markInfluxDBItem($item_id, $user_id, $field_id, true);
+            $influx_output = $itemDAO->markInfluxDBItem($item_id, $user_id, $workset_id, $field_id, true);
 
             $json_data = json_encode(array(
                 'mikbooked'
@@ -202,6 +204,8 @@ class ItemController extends Controller {
 
             $iteration = $request->request->get('iteration', null);
             
+            $workset_id = $request->request->get('workset_id', null);
+            
             $field_id = $request->request->get('field_id', null);
 
             $itemDAO = $this->getDoctrine()
@@ -211,7 +215,7 @@ class ItemController extends Controller {
             $field_complete = $itemDAO->done($item_id, $iteration, $user_id);
 
             //trigger une insertion influxDB
-            $influx_output = $itemDAO->markInfluxDBItem($item_id, $user_id, $field_id, false);
+            $influx_output = $itemDAO->markInfluxDBItem($item_id, $user_id, $workset_id, $field_id, false);
 
             $json_data = json_encode($field_complete);
 
@@ -231,20 +235,33 @@ class ItemController extends Controller {
 
     public function testAction() {
         
-        $itemDAO = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('FirstBundle:Item');
+        $workset_id = 1;
         
-        $begin = "2016-10-01";
-        $end = "2016-10-22";
         $user_id = 1;
+        
+        $begin  = "2016-10-01";
+        $end    = "2016-10-31";
         $mikbook = false;
-        $field_id = null;
-        $aggreg = "day";
         
-        $data = $itemDAO->fetchItemsInfluxData($user_id, $begin, $end, $mikbook, $field_id, $aggreg);
+        $workset = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('FirstBundle:Workset')
+                        ->fetchOneWithFields($workset_id);
+
         
-        dump($data);die;
+        $itemDAO = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('FirstBundle:Item');
+
+        
+        $data = $itemDAO->loadWorksetData($user_id, $workset, $begin, $end, $mikbook);
+        
+//        dump($data);die;
+        
+        return $this->render('FirstBundle:Item:test.html.twig', array(
+            'workset'   => $workset,
+            'data'      => $data,
+        ));
 
 
 //        $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());

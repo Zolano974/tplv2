@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 use FirstBundle\Repository\KanbanRepository;
 
-use FirstBundle\Helpers\InfluxDB\InfluxRepository;
-
+//use FirstBundle\Helpers\InfluxDB\InfluxRepository;
+use Zolano\FluxinBundle\Repository\InfluxRepository;
 use \Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class KanbanController extends Controller
@@ -52,11 +52,11 @@ class KanbanController extends Controller
     }
     
     //fonction dédiée ajax pour faire avancer un item d'une étape dans le kanban pour un tour donné
-    public function stepupAction($item_id, $iteration, $field_id){
+    public function stepupAction($item_id, $iteration, $field_id, $workset_id){
         
         $user_id = 1;
         
-        if($item_id === null || $iteration === null || $field_id === null){
+        if($item_id === null || $iteration === null || $field_id === null || $workset_id === null){
             throw new NotFoundResourceException();
         }       
         
@@ -64,6 +64,10 @@ class KanbanController extends Controller
         
         $itemDAO = $em->getRepository('FirstBundle:Item');
         $kanbanDAO = $em->getRepository('FirstBundle:Kanban');
+        
+        //on récupère le worksetId pour INfluxDB
+//        $field = $em->getRepository('FirstBundle:Field')->find($field_id);
+//        $workset_id = $field->getWorkset()->getId();
         
         //on incrément l'étape de l'item dans le kanban
         $item_kanban = $kanbanDAO->stepUp($item_id, $iteration, $user_id);
@@ -73,10 +77,8 @@ class KanbanController extends Controller
             //on check l'item à done
             $itemDAO->done($item_id, $iteration, $user_id);
             
-            $influxDAO = new InfluxRepository($this->getDoctrine()->getManager());
-            
             //on écrit un point influx dans la collection item_mkb
-            $influxDAO->markInfluxDBItem($item_id, $user_id, $field_id, false);
+            $itemDAO->markInfluxDBItem($item_id, $user_id, $workset_id, $field_id, false);
         }
         
 //        dump($item_kanban); die;

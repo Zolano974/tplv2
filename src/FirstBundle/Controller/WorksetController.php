@@ -73,8 +73,10 @@ class WorksetController extends Controller
 //        dump("status");
 //        dump($item_status);
 //        die;
+
         
         return $this->render('FirstBundle:Workset:work.html.twig', array(
+            'workset_id'=> $id,
             'data'      => $items,
             'tours'     => $tours,
             'status'    => $item_status,

@@ -4,7 +4,7 @@
 
 {% block title %}
     
-    Tourplanner V2
+    Tourplanner V2 {{workset_id }}
     
 {% endblock  %}
 
@@ -94,7 +94,7 @@
                                     {% set html_id = "i-" ~  item.id ~ "_mkb_f-" ~  field_id  %}
                                     <span {{ book }} id="{{ html_id }}" 
                                                      class="glyphicon glyphicon-book pointer" 
-                                                     onclick='mikbook({{ item.id }},{{field_id}},"{{ html_id }}");'>
+                                                     onclick='mikbook({{ item.id }},{{field_id}},"{{ workset_id }}");'>
                                     </span>
                                                      
                                     <span {{ glasses }} id="{{ html_id }}_ok" class="glyphicon glyphicon-sunglasses mikbook_ok"></span>                                 
@@ -118,7 +118,7 @@
                                 <span class="glyphicon glyphicon-pencil pointer"      {#      AFFICHAGE DES matrices kanban     #}
                                       id="chk_t-{{ num_tour }}_i-{{ tour[item.id].item_id }}"   
                                       name="tour_{{ num_tour }}_check" {{ undone }} 
-                                      onclick='done({{ num_tour }},{{ tour[item.id].item_id }},{{ field_id }});'></span>
+                                      onclick='done({{ num_tour }},{{ tour[item.id].item_id }},{{ field_id }},{{ workset_id }});'></span>
 
                                 <span id="chk_t-{{ num_tour }}_i-{{ tour[item.id].item_id }}_ok" 
                                       class="glyphicon glyphicon-ok-sign field_{{ tour[item.id].field_id }}Xtour_{{ num_tour }} itemdone" 
@@ -161,7 +161,12 @@
 
         
         //fonction JS qui coche l'item comme mikbooké en BDD et qui met à jour la vue
-        function mikbook(pitem_id, pfield_id){   
+        function mikbook(pitem_id, pfield_id, pworkset_id){   
+            
+            
+            console.log('field ' + pfield_id);
+            console.log('item ' + pitem_id);
+            console.log('workset ' + pworkset_id);            
 
             //ID html pour la div qui contient le titre de l'item
             var item_body_id = 'f-'+pfield_id+'_i-'+pitem_id;
@@ -171,8 +176,9 @@
             $.post( 
                     '{{ path('mikbook_item') }}',
                     {
-                        item_id : pitem_id,
-                        field_id: pfield_id
+                        item_id     : pitem_id,
+                        workset_id  : pworkset_id,
+                        field_id    : pfield_id
                     }   
             )
             .done(function(data){
@@ -187,9 +193,11 @@
             
         }
         
-        function done(piteration, pitem_id, pfield_id){
+        function done(piteration, pitem_id, pfield_id, pworkset_id){
             
             console.log('field ' + pfield_id);
+            console.log('item ' + pitem_id);
+            console.log('workset ' + pworkset_id);
             
             var html_id = "chk_t-" + piteration + "_i-" + pitem_id;
             
@@ -199,6 +207,7 @@
                     {
                         item_id : pitem_id,
                         iteration : piteration,
+                        workset_id  : pworkset_id,
                         field_id : pfield_id
                     }   
             )

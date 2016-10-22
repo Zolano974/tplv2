@@ -1,0 +1,39 @@
+{# Item/Index #}
+
+{% extends "FirstBundle:Layouts:layout.html.twig" %}
+
+{% block title %}
+    Item TEST
+    
+{% endblock  %}
+
+{% block content %}
+    
+    <h1>TEST de graphing des fields </h1>
+
+                    <!-- Graphique -->
+                <div class="row">
+
+
+                        <div id="graph" class="push_top">
+                            <div id="chartdiv" style="min-height:500px;">
+
+                            </div>
+                        </div>       
+
+
+                    <!--</div>--> 
+                </div>
+{% endblock  %}
+
+{% block js_scripts %}
+       
+{#    ON POSE UNE DATATABLE SUR LA LISTE#}
+
+        <script type="text/javascript">
+           $(document).ready(function(){
+               $("#items_table").DataTable();
+           });
+        </script>   
+
+{% endblock  %}

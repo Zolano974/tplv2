@@ -45,8 +45,8 @@
                     {% for item in items_notdone %}
                     <div class="row">
 
-                        <a href="{{ path('kanban_stepup', {'item_id' : item.id, 'iteration' : iteration, 'field_id' : field.id }) }}">
-                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}')">
+                        <a href="{{ path('kanban_stepup', {'item_id' : item.id, 'iteration' : iteration, 'field_id' : field.id, 'workset_id' : workset_id }) }}">
+                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}', '{{ workset_id }}')">
 
                                 
                                 [{{item.id}}] &nbsp; {{ item.name }}
@@ -64,8 +64,8 @@
                     {% for item in items_todo %}
                     <div class="row">
 
-                        <a href="{{ path('kanban_stepup', {'item_id' : item.id, 'iteration' : iteration, 'field_id' : field.id }) }}">
-                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}')">
+                        <a href="{{ path('kanban_stepup', {'item_id' : item.id, 'iteration' : iteration, 'field_id' : field.id, 'workset_id' : workset_id }) }}">
+                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}', '{{ workset_id }}')">
 
                                 
                                 [{{item.id}}] &nbsp; {{ item.name }}
@@ -86,7 +86,7 @@
                     <div class="row">
 
 {#                        <a href="{{ path('kanban_stepup', {'item_id' : item.id, 'iteration' : iteration, 'field_id' : field.id }) }}">#}
-                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}')">
+                            <div class="square col-sm-8 col-sm-offset-2" onclick="stepUp('{{item.id}}','{{iteration}}', '{{ workset_id }}')">
 
                                 
                                 [{{item.id}}] &nbsp; {{ item.name }}
@@ -102,9 +102,9 @@
 {% block js_scripts %}
 
     <script type="text/javascript">
-        function stepUp(item_id, iteration){
+        function stepUp(item_id, iteration, workset_id){
             
-            console.log('item ' + item_id + ' iteration ' + iteration);
+            console.log('item ' + item_id + ' iteration ' + iteration + 'workset_id ' + workset_id);
         }
     </script>
 {% endblock  %}

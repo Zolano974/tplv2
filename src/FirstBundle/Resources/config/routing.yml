@@ -101,5 +101,5 @@ kanban_kanban:
     defaults: { _controller: FirstBundle:Kanban:kanban }
     
 kanban_stepup:
-    path:     /kanban/stepup/{item_id}/{iteration}/{field_id}
+    path:     /kanban/stepup/{item_id}/{iteration}/{field_id}/{workset_id}
     defaults: { _controller: FirstBundle:Kanban:stepup }

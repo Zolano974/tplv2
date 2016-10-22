@@ -52,7 +52,7 @@ class InfluxRepository{
             'idb_user'      => 'zolano',
             'idb_pwd'       => 'zolano',
             'idb_host'      => 'localhost',
-            'idb_dbname'    => 'test',
+            'idb_dbname'    => 'items',
         );
 
 //        $this->db = $app->db;
@@ -113,26 +113,19 @@ class InfluxRepository{
     //select * from stats_Cecosane where time < '2016-05-01T00:00:00Z' AND time  > '2016-02-03T00:00:00Z' AND kpi_id = '133'
     public function selectMetrics($fields, $collection,  $begin, $end, $where = "", $groupby = "", $database = null){
         
-        if($database === null) $database = $this->config['idb_dbname'];
-//        
-//        dump($begin);
-//        dump($end);
-        
+        if($database === null) $database = $this->config['idb_dbname'];    
         
          //on retire le décalage avec GMT aux bornes temporelles pour bien avoir les données de minuit à minuit
         $begin = $this->addGMToffset($begin . " 00:00:00", true);
         $end = $this->addGMToffset($end . " 00:00:00", true);
-//        
-//        dump("addGMToffset");
-//        dump($begin);
-//        dump($end);
 
         $where_condition = ($where !== "") ? " AND $where" : "" ;
 
         $query = "SELECT $fields FROM $collection WHERE time > '$begin' AND time <= '$end' $where_condition $groupby";
-        
-        dump($query);
 
+//        dump($database);
+        dump($query); 
+        
         return $this->selectQueryFromDatabase($database, $query);
     }
     
@@ -151,119 +144,13 @@ class InfluxRepository{
  *  ############################################### ################################# ###############################################
  *  ############################################### ################################# ###############################################
  *  ############################################### ################################# ###############################################
- */
 
-
-    /**     fonction dédiée à récupérer les données et les paramètres AMCHARTS pour un graphe                   FONCTION DU PLUS HAUT NIVEAU D'ORCHESTRATION !!!
-     * @param $graph            GraphEntity correspondant au graphe (ou autre), muni d'une liste de KPIs, et d'une fonction getKpiList()
-     * @param null $begin       date de début de la récupération au format "Y-m-d",;
-     * @param null $end         date de fin de la récupération au format "Y-m-d"
-     * @param bool $influx      mode de récupération (influx = true --> influxDB sinon MySQL)
-     * @return array, composé de 4 champs :
-     *                                      'graph'         =>  L'entité Graph passé en entrée
-     *                                      'kpi_data'      =>  Les séries collectées, remaniées mais pas formatées pour AmCharts                                   (construction d'un tableau de données dans la vue)
-     *                                      'chart_params'  =>  Les paramètres du graphe (en JSON), directement pluggable dans ungraphe amCharts :                  chart = AmCharts.makeChart("html_id", chart_params);
-     *                                      'chart_data'    =>  Les données formatées pour Amcharts (en JSON), directement pluggable dans un graphe amChart :       chart.dataProvider = generateChartData(chart_data);
-     */
-    public function loadGraphData($graph, $begin = null, $end = null){
-//
-        //on récupère les données des KPI du graphe
-        $series = $this->fetchGraphData($graph, $begin, $end);
-
-        //on formate les données + convert JSON pour les rendre exploitables par les graphes AmCharts
-        $chart_data = $this->formatData4AmCharts($series);
-
-        //on obtient un objet JSON représentant les paramètres du graphe AmCharts, appliquables directement
-        $chart_params = $this->getAmChartsJsonParams($series);
-
-        //on ordonne le résultat dans un structure à 4 champs
-        $output = array(
-            'graph'         => $graph,
-            'kpi_data'      => $series,
-            'chart_data'    => $chart_data,
-            'chart_params'  => $chart_params,
-        );
-
-        return $output;
-
-    }
-
-
-    /**  Renvoie l'ensemble des données pour le graphe passé en paramètre entre les bornes temporelles $begin et $end (toutes les données de tous les KPI du graphe)
-     * @param $graph            Entity Graph (ou autre) : doit posséder une fonction getKpiList(), qui renvoie une liste d'objets KPI (munis à minima d'un ID, d'une COLLECTION, DATABASE et d'un NAME)
-     * @param null $begin       Date de début au format YYYY-M-DD. Peut être nul auquel cas la valeur par défaut sera J - 1 mois.
-     * @param null $end         Date de fin au format YYYY-M-DD. Peut être nul auquel cas la valeur par défaut sera le jour J.
-     * @return array
-     */
-    public function fetchGraphData($graph, $begin = null, $end = null){
-
-        $series = array();
-
-        //on assure les valeurs de BEGIN et END
-        $date = date("Y-m-d");
-        //$last_week = date("Y-m-d",mktime(0,0,0,date("m"), date("d")-7, date("Y")));
-        $last_month = date("Y-m-d",mktime(0,0,0,date("m")-1, date("d"), date("Y")));
-
-        //si les dates ne sont pas renseignées, on met les bornes par défaut (de ya un mois à AJD)
-        if($begin === null){ $begin = $last_month; }
-        if($end === null){ $end = $date; }
-
-        //pour chaque indicateur du graphe
-        foreach($graph->getKpiList() as $kpi){
-
-            $data =  $this->fetchKpiData($kpi, $begin, $end);
-
-            if(count($data) > 0) $series[$kpi->name] = $data;
-        }
-
-        //on formatte le résultat dans un format facilement exploitable par la suite
-        return $this->formatSeries($series);
-
-    }
-
-    /** Renvoie toutes les données stockées pour le KPI passé en paramètre, entre les bornes temporelles $begin et $end
-     * @param $kpi          Structure possédant au moins :
-     *                                                      - id
-     *                                                      - name
-     *                                                      - database
-     *                                                      - collection
-     * @param $begin
-     * @param $end
-     * @return mixed
-     */
-    public function fetchKpiData($kpi, $begin, $end){
-
-        //on récupère les infos importantes du KPI
-        $id = $kpi->id;
-        $database = $kpi->database;
-        $collection = $kpi->collection;
-
-        //on retire le décalage avec GMT aux bornes temporelles pour bien avoir les données de minuit à minuit
-        $begin_offset = $this->addGMToffset($begin . " 00:00:00", true);
-        $end_offset = $this->addGMToffset($end . " 00:00:00", true);
-
-        //on construit et on écrit la requête
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $query = $queryBuilder  ->select('value, time')
-                                ->from($collection)
-                                ->where("kpi_id = '$id' AND ( time >= '$begin_offset' AND time <= '$end_offset' )");
-
-        $SqlQuery = $query->getSQL();
-
-        //on execute la requete sur la database correspondante influxDB
-        $brute_data = $this->selectQueryFromDatabase($database, $SqlQuery);
-
-        //on formate le résultat pour que la structure renvoyée soit plus facile a manipuler par la suite
-        $data = $this->Influx2Array($brute_data);
-
-        return $data;
-    }
 
     /** Convertit le format des données renvoyées par InfluxDB à un format array propice aux usages futurs de ces données
      * @param $brute_data       : données issues d'un requêtage direct de la base influxDB (avec selectQueryFromDatabase par exemple)
      * @return array            : données au format "Séries" utilisé en input pour le formatage ultérieur des données
      */
-    private function Influx2Array($brute_data){
+    public function Influx2Array($brute_data){
 
         $results = $brute_data['results'][0];
 
@@ -294,10 +181,11 @@ class InfluxRepository{
      * @param $series       données renvoyees par fetchGraphData ou fetchKpiData
      * @return array        données dans un format exploitable pour AmCharts
      */
-    private function formatSeries($series){
+    public function formatSeries($series){
 
         $kpi_headers = array();
         $kpi_values = array();
+     
         foreach($series as $kpi => $data){
             $kpi_headers[] = $kpi;
             foreach($data as $row){
@@ -320,7 +208,7 @@ class InfluxRepository{
      * @param $series         Output de formatSeries()
      * @return JSON             Données en JSON au format attendu par les graphes AmCharts
      */
-    private function formatData4AmCharts($series){
+    public function formatData4AmCharts($series){
 
         $result = array();
         foreach($series['values'] as $date => $values){
@@ -340,7 +228,7 @@ class InfluxRepository{
      * @param $series       Données des KPI du graphe, servant de base pour la constitution du paramétrage (OUTPUT de formatSeries() )
      * @return JSON         Objet JSON de configuration du graphe AmChart dédié à tracer ces données
      */
-    private function getAmChartsJsonParams($series){
+    public function getAmChartsJsonParams($series){
 
         $params = $this->formatParams4amCharts($series);
 

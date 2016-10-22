@@ -128,6 +128,7 @@ class Workset
     {
         return $this->generic;
     }
+    
     function getFields() {
         return $this->fields;
     }

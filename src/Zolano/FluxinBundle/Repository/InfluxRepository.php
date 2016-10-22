@@ -124,7 +124,7 @@ class InfluxRepository{
         $query = "SELECT $fields FROM $collection WHERE time > '$begin' AND time <= '$end' $where_condition $groupby";
 
 //        dump($database);
-        dump($query); 
+//        dump($query); 
         
         return $this->selectQueryFromDatabase($database, $query);
     }

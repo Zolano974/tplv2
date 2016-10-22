@@ -255,6 +255,7 @@ class ItemController extends Controller {
 
         
         $data = $itemDAO->loadWorksetData($user_id, $workset, $begin, $end, $mikbook, 'hour');
+
         
 //        dump($data);die;
         

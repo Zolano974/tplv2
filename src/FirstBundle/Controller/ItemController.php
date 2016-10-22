@@ -239,8 +239,8 @@ class ItemController extends Controller {
         
         $user_id = 1;
         
-        $begin  = "2016-10-01";
-        $end    = "2016-10-31";
+        $begin  = "2016-10-21";
+        $end    = "2016-10-23";
         $mikbook = false;
         
         $workset = $this->getDoctrine()
@@ -254,13 +254,15 @@ class ItemController extends Controller {
                         ->getRepository('FirstBundle:Item');
 
         
-        $data = $itemDAO->loadWorksetData($user_id, $workset, $begin, $end, $mikbook);
+        $data = $itemDAO->loadWorksetData($user_id, $workset, $begin, $end, $mikbook, 'hour');
         
 //        dump($data);die;
         
         return $this->render('FirstBundle:Item:test.html.twig', array(
-            'workset'   => $workset,
-            'data'      => $data,
+            'workset'           => $workset,
+            'series'            => $data['series'],
+            'chart_data'        => $data['chart_data'],
+            'chart_params'      => $data['chart_params'],
         ));
 
 

@@ -221,7 +221,8 @@ class InfluxRepository{
             $result[] = $row;
         }
 
-        return json_encode($result);
+//        return json_encode($result);
+        return $result;
     }
 
     /** Restitue a partir des données en input un objet JSON de configuration apte à paramétrer le graphe AmCharts qui devra les tracer
@@ -360,7 +361,8 @@ class InfluxRepository{
             "position"  => "bottom-right",
         );
 
-        return json_encode($json_params);
+//        return json_encode($json_params);
+        return $json_params;
     }
 
 

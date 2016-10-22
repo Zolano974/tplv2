@@ -173,12 +173,12 @@ class ItemRepository extends EntityRepository
     ############# FONCTIONS LIEES A INFLUXDB ###########"""
     
     //renvoie toutes les courbes des matières du workset, ainsi que la courbe agrégée
-    public function loadWorksetData($user_id, $workset, $begin = null, $end = null, $mikbook = false){
+    public function loadWorksetData($user_id, $workset, $begin = null, $end = null, $mikbook = false, $aggreg = 'day'){
         
         $fields = $workset->getFields();
         $fields[] = null;
         
-        return $this->loadFieldsData($user_id, $workset->getId(), $workset->getFields(), $begin, $end, $mikbook);
+        return $this->loadFieldsData($user_id, $workset->getId(), $workset->getFields(), $begin, $end, $mikbook, $aggreg);
     }
     
     
@@ -195,12 +195,12 @@ class ItemRepository extends EntityRepository
      *                                      'chart_params'  =>  Les paramètres du graphe (en JSON), directement pluggable dans ungraphe amCharts :                  chart = AmCharts.makeChart("html_id", chart_params);
      *                                      'chart_data'    =>  Les données formatées pour Amcharts (en JSON), directement pluggable dans un graphe amChart :       chart.dataProvider = generateChartData(chart_data);
      */
-    public function loadFieldsData($user_id, $workset_id, $fields = array(), $begin = null, $end = null, $mikbook = false){
+    public function loadFieldsData($user_id, $workset_id, $fields = array(), $begin = null, $end = null, $mikbook = false, $aggreg = 'day'){
         
         $influx = $this->getInfluxRepository();
 //
         //on récupère les données des KPI du graphe
-        $series = $this->fetchFieldsData($user_id, $workset_id, $fields, $begin, $end, $mikbook);
+        $series = $this->fetchFieldsData($user_id, $workset_id, $fields, $begin, $end, $mikbook, $aggreg);
 
         //on formatte le résultat dans un format facilement exploitable par la suite
         $series =  $influx->formatSeries($series);        

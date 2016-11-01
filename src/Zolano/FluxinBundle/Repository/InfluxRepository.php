@@ -116,8 +116,8 @@ class InfluxRepository{
         if($database === null) $database = $this->config['idb_dbname'];    
         
          //on retire le décalage avec GMT aux bornes temporelles pour bien avoir les données de minuit à minuit
-        $begin = $this->addGMToffset($begin . " 00:00:00", true);
-        $end = $this->addGMToffset($end . " 00:00:00", true);
+//        $begin = $this->addGMToffset($begin . " 00:00:00", true);
+//        $end = $this->addGMToffset($end . " 00:00:00", true);
 
         $where_condition = ($where !== "") ? " AND $where" : "" ;
 
@@ -300,7 +300,7 @@ class InfluxRepository{
         $json_params = new \stdClass();
 
         $json_params->type = "serial";
-        $json_params->theme = (isset($_SESSION['theme']) && $_SESSION['theme'] != "") ? $_SESSION['theme'] : "light";
+        $json_params->theme = "light";
         $json_params->legend = array(
             'marginLeft'        => 110,
             'useGraphSettings'  => true,
@@ -347,6 +347,7 @@ class InfluxRepository{
                 "valueAxis"             => "v1",
                 "bullet"                => "round",
                 "title"                 => $chart->title,
+                "type"                  => "smoothedLine",
                 "bulletBorderThickness" => 1,
                 "hideBulletsCount"      => 30,
                 "valueField"            => $chart->valueField,

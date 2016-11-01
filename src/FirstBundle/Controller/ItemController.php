@@ -240,7 +240,7 @@ class ItemController extends Controller {
         $user_id = 1;
         
         $begin  = "2016-10-21";
-        $end    = "2016-10-23";
+        $end    = "2016-10-30";
         $mikbook = false;
         
         $workset = $this->getDoctrine()

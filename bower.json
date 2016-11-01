@@ -7,6 +7,8 @@
         "amcharts": "latest",
         "datatables.net": "latest",
         "datatables.net-bs": "latest",
-        "fartbastic": "latest"
+        "farbtastic": "latest",
+	"bootstrap-datepicker": "latest"
+
     }
 }

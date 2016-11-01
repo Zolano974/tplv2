@@ -203,7 +203,9 @@ class ItemRepository extends EntityRepository
         $series = $this->fetchFieldsData($user_id, $workset_id, $fields, $begin, $end, $mikbook, $aggreg);
 
         //on formatte le résultat dans un format facilement exploitable par la suite
-        $series =  $influx->formatSeries($series);        
+        $series =  $influx->formatSeries($series);
+
+        $series = $this->addColorsFromDB($series);
 
         //on formate les données + convert JSON pour les rendre exploitables par les graphes AmCharts
         $chart_data = $influx->formatData4AmCharts($series);
@@ -303,10 +305,12 @@ class ItemRepository extends EntityRepository
 
         }
         
-        $collection = ($mkb) ? "item_mkb" : "items_done" ;
+        $collection = ($mkb) ? "items_mkb" : "items_done" ;
         
         //on crée la condition sur matiere uniquement si différent de -1
         $where_condition = " workset_id = '$workset_id'";
+
+        $where_condition .= " AND user_id = '$user_id'";
         
         //on crée la condition sur matiere uniquement si différent de -1
         $where_condition .= ($field_id == null) ? "" : " AND field_id = '$field_id'";
@@ -358,7 +362,38 @@ class ItemRepository extends EntityRepository
         $influx = $this->getInfluxRepository();    
 
         return $influx->mark($mark_array);
-    }        
+    }
+
+    /** Fonction qui vise à rajouter un champs COLOR pour les series avant qu'elles soient provessées pour créerle graphe AmCharts
+     * @param $series
+     */
+    private function addColorsFromDB($series){
+
+        $colors = array();
+
+        $fieldDAO = $this   ->getEntityManager()
+                            ->getRepository('FirstBundle:Field');
+
+        foreach($series['headers'] as $fieldname){
+
+            if($fieldname === "Total"){
+                $color = "#333";
+            }
+            else{
+                $color = $fieldDAO->findBy(
+                                    array('name' => $fieldname)
+                                )[0]
+                                ->getColor();
+            }
+
+            $colors[$fieldname] = $color;
+
+        }
+
+        $series['colors'] = $colors;
+
+        return $series;
+    }
         
     
     /** Instancie un Influxrepository

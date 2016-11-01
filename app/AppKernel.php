@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Symfony\Bundle\DebugBundle\DebugBundle(),
             new Zolano\FluxinBundle\InfluxBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

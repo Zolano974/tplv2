@@ -124,7 +124,7 @@ class InfluxRepository{
         $query = "SELECT $fields FROM $collection WHERE time > '$begin' AND time <= '$end' $where_condition $groupby";
 
 //        dump($database);
-//        dump($query); 
+//        dump($query);
         
         return $this->selectQueryFromDatabase($database, $query);
     }
@@ -233,7 +233,7 @@ class InfluxRepository{
 
         $params = $this->formatParams4amCharts($series);
 
-        $json_params = $this->generateJsonParams4amcharts($params);
+        $json_params = $this->generateJsonParams4amcharts($params, $series);
 
         return $json_params;
 
@@ -245,17 +245,7 @@ class InfluxRepository{
      */
     private function formatParams4amCharts($series){
 
-        $colors = array(
-            "#4d4d4d",
-            "#5da5da",
-            "#faa43a",
-            "#60bd68",
-            "#f17cb0",
-            "#b2912f",
-            "#b276b2",
-            "#decf3f",
-            "#f15854",
-        );
+        $colors = $series['colors'];
 
         $params = array();
 
@@ -266,8 +256,8 @@ class InfluxRepository{
             $axis = new \stdClass();
             $axis->offset = $axis_offset;
             $axis->gridAlpha = 0;
-            $axis->axisColor = (isset($colors[$color_index])) ? $colors[$color_index] : "#F60";
-            $axis->axisThickness = 2;
+            $axis->axisColor = $colors[$head];
+            $axis->axisThickness = 1;
 
             $chart = new \stdClass();
             $chart->title = $head;
@@ -275,6 +265,7 @@ class InfluxRepository{
             $chart->bullet = "round";
             $chart->hideBulletsCount = 30;
             $chart->bulletBorderThickness = 1;
+//            $chart->bulletColorR = "#333";
 
             $params[] = array(
                 'axis'      => $axis,
@@ -282,7 +273,7 @@ class InfluxRepository{
             );
 
             $axis_offset += 30;
-            $color_index++;
+
         }
         //        dump($params);
         return $params;
@@ -316,6 +307,8 @@ class InfluxRepository{
         $json_params->chartCursor = array(
             'cursorPosition'            => 'mouse',
             'cursorAlpha'               => 0.1,
+            'cursorColor'               => "#333",
+            'color'                     => "#FFF",
             'fullWidth'                 => true,
             'valueLineBalloonEnabled'   => true,
             "categoryBalloonDateFormat" => "DD MMM  HHh00",
@@ -349,6 +342,8 @@ class InfluxRepository{
                 "title"                 => $chart->title,
                 "type"                  => "smoothedLine",
                 "bulletBorderThickness" => 1,
+                "lineColor"             => $axis->axisColor,
+                "legendColor"           => $axis->axisColor,
                 "hideBulletsCount"      => 30,
                 "valueField"            => $chart->valueField,
                 "fillAlphas"            => 0,
@@ -362,6 +357,8 @@ class InfluxRepository{
             "position"  => "bottom-right",
         );
 
+//        dump($params);
+//        die;
 //        return json_encode($json_params);
         return $json_params;
     }

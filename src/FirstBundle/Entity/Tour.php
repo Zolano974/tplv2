@@ -35,6 +35,13 @@ class Tour
      */
     private $iteration;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="workset_id", type="integer")
+     */
+    private $workset_id;
+
 
     /**
      * Get id
@@ -91,4 +98,23 @@ class Tour
     {
         return $this->iteration;
     }
+
+    /**
+     * @return int
+     */
+    public function getWorksetId()
+    {
+        return $this->workset_id;
+    }
+
+    /**
+     * @param int $workset_id
+     */
+    public function setWorksetId($workset_id)
+    {
+        $this->workset_id = $workset_id;
+    }
+
+
+
 }

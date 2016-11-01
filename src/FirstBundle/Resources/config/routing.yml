@@ -103,3 +103,13 @@ kanban_kanban:
 kanban_stepup:
     path:     /kanban/stepup/{item_id}/{iteration}/{field_id}/{workset_id}
     defaults: { _controller: FirstBundle:Kanban:stepup }
+
+
+#STATISTIQUES
+stats_avancement:
+    path:    /stats/curve/{workset_id}/{mikbook}
+    defaults: { _controller: FirstBundle:Stats:curve, mikbook: false }
+
+stats_tour:
+    path:    /stats/tour/{workset_id}
+    defaults: { _controller: FirstBundle:Stats:tour, mikbook: false }

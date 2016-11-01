@@ -116,3 +116,33 @@
     background-color: #DBECFD;
 }
 
+/** PARTIE DEDIEE AUX STATS */
+
+/*!*SUR TABLETTE *!*/
+/*@media screen and (max-width: 800px) {*/
+    /*.chartdiv{*/
+        /*!*border:1px solid black;*!*/
+        /*min-height:200px;*/
+    /*}*/
+
+/*}*/
+/*!* SUR PC *!*/
+/*@media screen and (min-width: 800px) {*/
+    /*.chartdiv{*/
+        /*!*border:1px solid black;*!*/
+        /*min-height:500px;*/
+    /*}*/
+
+/*}*/
+
+.chartdiv{
+    border:1px solid #333;
+    min-height:350px;
+}
+
+.graph-container{
+    padding: 15px;
+    margin-left:10px;
+    margin-right:10px;
+}
+

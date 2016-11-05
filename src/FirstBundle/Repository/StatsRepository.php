@@ -90,18 +90,18 @@ class StatsRepository{
         //on implode les ID pour pouvoir les meyyre dans une condition SQL
         $fieldsIdString = implode(",", $fieldIds);
 
-        $count_global = count($fieldsIdString);
+        $count_global = count($fieldIds);
 
         $qb = $this->_em->getConnection()->createQueryBuilder();
 
-        $query_done = $qb   ->select('count(distinct(field_id))')
+        $query_done = $qb   ->select('count(distinct(field_id)) as count')
                             ->from($this->linkTourField, 'lt')
                             ->leftJoin('lt', 'tour','t','lt.tour_id = t.id')
                             ->where('lt.field_id IN (' . $fieldsIdString . ')')
                             ->andWhere('lt.user_id  = ' . $user_id)
                             ->andWhere('t.iteration = ' . $iteration);
 
-        $count_done = $query_done->execute()->fetchAll();
+        $count_done = $query_done->execute()->fetch();
 
         return array(
             'total' => $count_global,

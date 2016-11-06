@@ -69,7 +69,11 @@ class StatsController extends Controller {
 
     public function tourAction($workset_id){
 
-        $workset_id = 1;
+        $request = Request::createFromGlobals();
+
+        $tourDAO = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('FirstBundle:Tour');
 
         $user_id = 1;
 
@@ -81,19 +85,50 @@ class StatsController extends Controller {
 
         $statsDAO = new StatsRepository($this->getDoctrine()->getEntityManager());
 
-//        $iteration = $statsDAO->getLastIteration($workset_id, $user_id);
+        $last_iteration = $tourDAO->getLastTour($workset_id, $user_id);
 
+        $iteration = $request->query->get('iteration', $last_iteration);
 
-        $iteration = 1;
+        $it_numbers = array();
+        for($i = $last_iteration; $i > 0; $i--){
+            $it_numbers[] = "$i";
+        }
+        sort($it_numbers);
 
         $stats = $statsDAO->getWorksetGlobal($workset, $iteration, $user_id);
 
-        dump($stats);
-        die;
+        //si c'est un appel Ajax
+        if($request->isXmlHttpRequest()){
+
+            //traitement del'appel ajax
+
+            #renvoyer du JSON
+
+            $json_data= json_encode(array(
+                'stats' => $stats,
+                'iteration' => $iteration,
+            ));
+
+            $response = new Response($json_data);
+
+            $response->headers->set('Content-Type','application/json');
+
+            return $response;
+        }
+        else{
+            return $this->render('FirstBundle:Stats:tour.html.twig', array(
+                'workset_id'    => $workset_id,
+                'iteration'     => $iteration,
+                'it_numbers'    => $it_numbers,
+                'stats'         => $stats,
+            ));
+
+        }
 
 
 
     }
+
 
 
     public function testAction() {

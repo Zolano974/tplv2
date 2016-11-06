@@ -97,7 +97,7 @@
     
     min-width: 80px;
     min-height: 80px;
-    background-color: #FFF;
+    background-color: #baec7e;
     
     margin-top: 15px;
     margin-bottom: 15px;
@@ -140,9 +140,64 @@
     min-height:350px;
 }
 
+.piechartdiv{
+    border: 1px solid white;
+    margin-top: 8px;
+    min-height:150px;
+    min-width: 150px;
+}
+
 .graph-container{
     padding: 15px;
     margin-left:10px;
     margin-right:10px;
 }
 
+
+.stats-square{
+    background-color: #0a0a0a;
+    color: white;
+    font-size: 90%;
+    width: 120px;
+    height: 120px;
+
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 8px;
+}
+
+#tours-breadcrumb{
+    width: 100%;
+    height: 35px;
+    background-color: #1d5987;
+
+}
+
+#tours-breadcrumb span{
+    cursor: pointer;
+    color:white;
+    min-height: 35px;
+    border-right: 1px solid white;
+    padding-top: 1%;
+}
+
+/*.triangle-right{*/
+    /*width: 0;*/
+    /*height: 0;*/
+    /*border-style: solid;*/
+    /*border-width: 10px 0 10px 10px;*/
+    /*border-color: transparent transparent transparent #EEE;*/
+    /*margin-right: 5px;*/
+    /*margin-left:0px;*/
+/*}*/
+
+/*.rectangle{*/
+    /*background-color: #EEE;*/
+    /*width: 50px;*/
+    /*height:20px;*/
+    /*border-width: 1px;*/
+    /*border-color : green blue red violet;*/
+    /*margin-right: 0px;*/
+    /*margin-left:5px;*/
+
+/*}*/

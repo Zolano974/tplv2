@@ -103,9 +103,11 @@ class StatsRepository{
 
         $count_done = $query_done->execute()->fetch();
 
+
+
         return array(
-            'total' => $count_global,
-            'done'  => $count_done,
+            'total' => "$count_global",
+            'done'  => $count_done['count'],
         );
     }
 
@@ -149,20 +151,11 @@ class StatsRepository{
 ////        dump($global);
 //        dump("$done / $global");
 
-        if($global != 0){
-//            dump("$done / $global"); die;
-            $percent = ($done / $global) * 100;
-        }
-        else{
-            $percent = 0;
-        }
-
-
-        $percent = $done / $global;
+        $percent = ($global != 0) ? round((($done / $global) * 100), 1) : 0 ;
 
         return array(
-            'total'         => $count_global,
-            'done'          => $count_done,
+            'total'         => $global,
+            'done'          => $done,
             'percentage'    => $percent,
         );
     }
@@ -210,13 +203,7 @@ class StatsRepository{
 //        dump($global);
 //        dump("$done / $global");die;
 
-        if($global != 0){
-//            dump("$done / $global"); die;
-            $percent = ($done / $global) * 100;
-        }
-        else{
-            $percent = 0;
-        }
+        $percent = ($global != 0) ? round((($done / $global) * 100), 1) : 0 ;
 
 
         $fieldname = $field->getName();

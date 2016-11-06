@@ -1,0 +1,224 @@
+{# Item/Index #}
+
+{% extends "FirstBundle:Layouts:layout.html.twig" %}
+
+{% block title %}
+    Statistiques
+
+{% endblock  %}
+
+{% block content %}
+    <div class="container">
+
+        {# Frise qui propose tous les tours #}
+        <div id="tours-breadcrumb" class="row tours-breadcrumb">
+            {% for iteration in it_numbers %}
+                <span class="col-xs-1" onclick="loadTour({{ iteration }})">
+                    <center>{{ iteration }}</center>
+                </span>
+
+            {% endfor %}
+        </div>
+
+        {# Affichage des stats globales du tour#}
+        <div class="row">
+            <div class="col-xs-5">
+
+                <h1>Tour n° <div id="iteration">{{ iteration }}</div></h1>
+            </div>
+            <div class="col-xs-2">
+                Items : <span id="items_done">{{ stats.items.done }}</span>/<span id="items_total">{{ stats.items.total }}</span>
+                <br>
+                Matieres : <span id="fields_done">{{ stats.fields.done }}</span>/<span id="fields_total">{{ stats.fields.total }}</span>
+            </div>
+            <div class="col-xs-5">
+                <i>// TODO : Barre de %progression à <span id="items_percentage">{{ stats.items.percentage }}</span>%</i>
+            </div>
+        </div>
+        <hr>
+        {# Affichage des stats pour chaque matière #}
+        <div class="row">
+            <h2>Matières</h2>
+        </div>
+
+        {% for id, field in stats.fields_stats %}
+
+            <div class="col-xs-3">
+                <div class="row">
+                    <br>
+                    <b><center><big>{{ field.field_name }}</big>(<span id="{{ id }}-items_percentage">{{ field.percentage }}</span>%)</center></b>
+                </div>
+                <div class="row">
+                    {#<div class="stats-square">#}
+                        {#Total : <span id="{{ id }}-items_global">{{ field.items_global }}</span>#}
+                        {#<br>#}
+                        {#Terminés : <span id="{{ id }}-items_done">{{ field.items_done }}</span>#}
+                        {#<br>#}
+
+
+                        <div id="piechart-field-{{ id }}" class="piechartdiv" >
+
+                        </div>
+
+                    {#</div>#}
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+
+
+
+
+{% endblock  %}
+
+{% block js_scripts %}
+
+    <script type="text/javascript">
+
+        var pie_charts = [];
+
+        $(document).ready(function(){
+//            alert("nikoumouk");
+
+           var stats = {{ stats.fields_stats | json_encode | raw }};
+
+           pie_charts = generatePieCharts(stats);
+
+        });
+
+        function loadTour(iteration){
+
+            console.log(iteration);
+
+            var url = '{{ path('stats_tour', {'workset_id' : workset_id}) }}?iteration=' + iteration;
+
+            console.log(url);
+
+            $.get(
+                    url
+            )
+            .done(function(data){
+                console.log(data);
+
+                //maj du numéro de tour affiché
+                $("#iteration").html(data.iteration);
+
+                //maj de sstats globales du tour
+                $("#items_done").html(data.stats.items.done);
+                $("#items_total").html(data.stats.items.total);
+                $("#items_percentage").html(data.stats.items.percentage);
+                $("#fields_done").html(data.stats.fields.done);
+                $("#fields_total").html(data.stats.fields.total);
+
+                var fieldstats = data.stats.fields_stats;
+
+                console.log(fieldstats[1]);
+//
+                for(var field_id in fieldstats ){
+
+                    var field = fieldstats[field_id];
+
+//                    console.log(field);
+//
+//                    console.log("#" + field_id + "-items_percentage");
+//
+//                    $("#" + field_id + "-items_global").html(field.items_global);
+//                    console.log(field.items_global);
+//                    $("#" + field_id + "-items_done").html(field.items_done);
+//                    console.log(field.items_done);
+                    $("#" + field_id + "-items_percentage").html(field.percentage);
+                    var done = field.percentage;
+                    var undone = 100 - done;
+                    var newData = generatePieData(done, undone);
+                    pie_charts[field_id].dataProvider = newData;
+                    pie_charts[field_id].validateData();
+//                    console.log(field.percentage);
+                }
+
+//                generatePieParams(fieldstats);
+            });
+
+        }
+
+        function generatePieCharts(stats){
+
+            var charts = [];
+
+            for(var id in stats){
+
+                var field = stats[id];
+                console.log(field);
+
+                var percentage_done = field.percentage;
+                var percentage_undone = 100 - percentage_done;
+
+                var params = generatePieParams(percentage_done, percentage_undone);
+
+                var html_id = "piechart-field-" + id;
+
+                $("#"+html_id).html("");
+                var chart_pie = AmCharts.makeChart(html_id, params);
+
+                chart_pie.validateData();
+
+                charts[id] = chart_pie;
+
+            }
+
+            return charts;
+
+        }
+
+        function generatePieParams(done, undone){
+
+         var pie_params =    {
+
+                "type": "pie",
+                    "balloonText": " <b>[[title]]</b><br>([[percents]]%)</span>",
+                    "sequencedAnimation": false,
+                    "labelText": "",
+                    "titleField": "label",
+                    "valueField": "percent",
+                    "colorField": "color",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "dataProvider": generatePieData(done, undone)
+            };
+
+            return pie_params;
+
+        }
+
+        function generatePieData(done, undone){
+            return [
+                {
+                    "label": "A Finir",
+                    "percent": undone,
+                    "color": "#FF0000"
+                },
+                {
+                    "label": "Terminés",
+                    "percent": done,
+                    "color" : "#00FF00"
+                }
+            ];
+        }
+
+
+    </script>
+
+
+    {#    ON POSE UNE DATATABLE SUR LA LISTE#}
+
+    {#<script type="text/javascript">#}
+
+
+    {#</script>#}
+
+
+
+{% endblock  %}

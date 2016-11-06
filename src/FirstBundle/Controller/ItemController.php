@@ -175,6 +175,8 @@ class ItemController extends Controller {
 
             $itemDAO->mikbook($item_id, $user_id);
 
+//            dump("ok");die;
+
             //trigger une insertion influxDB
             //  ici mikbook = true
             $influx_output = $itemDAO->markInfluxDBItem($item_id, $user_id, $workset_id, $field_id, true);

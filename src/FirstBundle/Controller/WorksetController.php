@@ -115,7 +115,7 @@ class WorksetController extends Controller
                             ->getManager()
                             ->getRepository('FirstBundle:Tour');
         
-        $iteration = $request->query->get('iteration');
+//        $iteration = $request->query->get('iteration');
         
         $user_id = 1;
         
@@ -124,6 +124,8 @@ class WorksetController extends Controller
         $iteration = $tourDAO->getLastTour($workset_id, $user_id);
         
         $iteration++;
+
+//        dump("user id : $user_id , $workset_id , iteration = $iteration");die;
         
         $tourDAO->createTour($iteration, $workset_id, $user_id);
         

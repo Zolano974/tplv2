@@ -88,6 +88,8 @@ class TourRepository extends EntityRepository
         
         //on récupère l'ID inséré
         $id = $cnx->lastInsertId();
+
+//        dump($id);
         
         //on délègue la suite à INSERTTOURLINKS
         $this->insertTourLinks($id, $workset_id, $user_id, $iteration);

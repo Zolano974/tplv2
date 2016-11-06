@@ -3,6 +3,7 @@
 namespace FirstBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,6 +12,8 @@ use FirstBundle\Entity\Field;
 use FirstBundle\Form\FieldType;
 
 use \Symfony\Component\Translation\Exception\NotFoundResourceException;
+
+use \Doctrine\ORM\ORMException;
 
 class FieldController extends Controller
 {
@@ -57,23 +60,35 @@ class FieldController extends Controller
         $form = $this->createForm(FieldType::class, $field);
         
         $request = Request::createFromGlobals();
-        
+
+
         //si le formulaire a été soumis
         if($request->getMethod() == 'POST'){
-            
+
             $form->handleRequest($request);
-            
+
             if($form->isValid()){
-                
+
                 //on récupère le EntityManager
-                $em = $this->getDoctrine()->getManager();   
-                
+                $em = $this->getDoctrine()->getManager();
+
                 //on persiste le field
-                $em->persist($field);    
-                
-                //on valide les transactions
-                $em->flush();  
-                
+                $em->persist($field);
+
+//        dump("ok");die;
+
+                try{
+
+                    //on valide les transactions
+                    $em->flush();
+                }
+                catch(\Exception $e){
+                    dump($e); die;
+                }
+                catch(ORMException $e){
+                    dump($e); die;
+                }
+
                 //onrenvoie vers la liste
                 $url = $this->generateUrl('list_field');
                 return $this->redirect($url);                

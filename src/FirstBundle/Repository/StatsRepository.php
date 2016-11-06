@@ -223,8 +223,8 @@ class StatsRepository{
 
         return array(
             'field_name'    => $fieldname,
-            'items_global'  => $count_global,
-            'items_done'    => $count_done,
+            'items_global'  => $global,
+            'items_done'    => $done,
             'percentage'    => $percent,
         );
 

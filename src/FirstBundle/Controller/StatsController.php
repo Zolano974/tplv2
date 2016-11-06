@@ -84,7 +84,7 @@ class StatsController extends Controller {
 //        $iteration = $statsDAO->getLastIteration($workset_id, $user_id);
 
 
-        $iteration = 5;
+        $iteration = 1;
 
         $stats = $statsDAO->getWorksetGlobal($workset, $iteration, $user_id);
 

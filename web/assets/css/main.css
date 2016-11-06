@@ -173,9 +173,17 @@
 
 }
 
-#tours-breadcrumb span{
+#tours-breadcrumb .tour-span{
     cursor: pointer;
     color:white;
+    min-height: 35px;
+    border-right: 1px solid white;
+    padding-top: 1%;
+}
+#tours-breadcrumb .tour-span-negative{
+    background-color: white;
+    cursor: pointer;
+    color: #1d5987;
     min-height: 35px;
     border-right: 1px solid white;
     padding-top: 1%;

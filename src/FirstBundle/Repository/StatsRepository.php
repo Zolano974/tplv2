@@ -211,6 +211,7 @@ class StatsRepository{
         return array(
             'field_name'    => $fieldname,
             'items_global'  => $global,
+            'color'         => $field->getColor(),
             'items_done'    => $done,
             'percentage'    => $percent,
         );

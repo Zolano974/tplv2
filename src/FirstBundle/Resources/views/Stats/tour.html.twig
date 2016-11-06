@@ -12,9 +12,15 @@
 
         {# Frise qui propose tous les tours #}
         <div id="tours-breadcrumb" class="row tours-breadcrumb">
-            {% for iteration in it_numbers %}
-                <span class="col-xs-1" onclick="loadTour({{ iteration }})">
-                    <center>{{ iteration }}</center>
+            {% for it in it_numbers %}
+                {%  set class = '' %}
+                {% if it == iteration %}
+                    {%  set class = 'tour-span-negative' %}
+                {%  else %}
+                    {%  set class = 'tour-span' %}
+                {%  endif %}
+                <span id="breadcrumb-tour-{{ it }}" class="col-xs-1 {{ class }}" onclick="loadTour({{ it }})">
+                    <center>{{ it }}</center>
                 </span>
 
             {% endfor %}
@@ -77,147 +83,159 @@
 
 {% block js_scripts %}
 
-    <script type="text/javascript">
 
-        var pie_charts = [];
+<script type="text/javascript">
 
-        $(document).ready(function(){
+    var pie_charts = [];
+
+    var old_iteration = {{ iteration }};
+
+    $(document).ready(function(){
 //            alert("nikoumouk");
 
-           var stats = {{ stats.fields_stats | json_encode | raw }};
+        var stats = {{ stats.fields_stats | json_encode | raw }};
 
-           pie_charts = generatePieCharts(stats);
+        pie_charts = generatePieCharts(stats);
+
+    });
+
+
+    //genère l'ensemble des pie charts pour les fields présents dans la liste
+    function generatePieCharts(stats){
+
+        var charts = [];
+
+        for(var id in stats){
+
+            var field = stats[id];
+
+            var percentage_done = field.percentage;
+            var percentage_undone = 100 - percentage_done;
+
+            var params = generatePieParams(percentage_done, percentage_undone);
+
+            var html_id = "piechart-field-" + id;
+
+            $("#"+html_id).html("");
+            var chart_pie = AmCharts.makeChart(html_id, params);
+
+            chart_pie.validateData();
+
+            charts[id] = chart_pie;
+
+        }
+
+        return charts;
+
+    }
+
+
+    //génère l'objet de configuration du PIE CHART
+    function generatePieParams(done, undone){
+
+        var pie_params =    {
+
+            "type": "pie",
+            "balloonText": " <b>[[title]]</b><br>([[percents]]%)</span>",
+//                    "sequencedAnimation": true,
+            "labelText": "",
+            "titleField": "label",
+            "valueField": "percent",
+            "colorField": "color",
+            "fontFamily": "Arial",
+            "fontSize": 12,
+            "dataProvider": generatePieData(done, undone)
+        };
+
+        return pie_params;
+
+    }
+
+    //genère la partie DATA de la configuration du graphe
+    function generatePieData(done, undone){
+        return [
+            {
+                "label": "A Finir",
+                "percent": undone,
+                "color": "#FF0000"
+            },
+            {
+                "label": "Terminés",
+                "percent": done,
+                "color" : "#00FF00"
+            }
+        ];
+    }
+
+    //on appelle en ajax les données pour le nouveau tour selecionné et on génère les graphes a nouveau
+    function loadTour(iteration){
+
+        //url de l'action cible
+        var url = '{{ path('stats_tour', {'workset_id' : workset_id}) }}?iteration=' + iteration;
+
+        $.get(
+                url
+        )
+        .done(function(data){
+
+            //on change le style du tour qui a été quitté (normal)
+            $("#breadcrumb-tour-"+old_iteration).prop('class', 'col-xs-1 tour-span');
+
+            console.log("#breadcrumb-tour-"+iteration);
+            //on change le style du nouveau tour (negative)q
+            $("#breadcrumb-tour-"+iteration).prop('class', 'col-xs-1 tour-span-negative');
+
+            console.log("old : " + old_iteration + "\n new : " + iteration);
+
+            old_iteration = iteration;
+
+
+
+            console.log("#breadcrumb-tour-"+data.iteration);
+
+            //maj du numéro de tour affiché
+            $("#iteration").html(data.iteration);
+
+            //maj de sstats globales du tour
+            //ITEMS
+            $("#items_done").html(data.stats.items.done);
+            $("#items_total").html(data.stats.items.total);
+            $("#items_percentage").html(data.stats.items.percentage);
+            //FIELDS
+            $("#fields_done").html(data.stats.fields.done);
+            $("#fields_total").html(data.stats.fields.total);
+
+            var fieldstats = data.stats.fields_stats;
+
+            //maj des graphes & valeurs pour chaque field
+            for(var field_id in fieldstats ){
+
+                var field = fieldstats[field_id];
+                //maj du %
+                $("#" + field_id + "-items_percentage").html(field.percentage);
+                var done = field.percentage;
+                var undone = 100 - done;
+                //génération des nouvelles données du graphe
+                var newData = generatePieData(done, undone);
+                //maj du graphe avec les nouvelles données
+                pie_charts[field_id].dataProvider = newData;
+                pie_charts[field_id].validateData();
+//                pie_charts[field_id].animateAgain();
+            }
+
+
 
         });
 
-        function loadTour(iteration){
-
-            console.log(iteration);
-
-            var url = '{{ path('stats_tour', {'workset_id' : workset_id}) }}?iteration=' + iteration;
-
-            console.log(url);
-
-            $.get(
-                    url
-            )
-            .done(function(data){
-                console.log(data);
-
-                //maj du numéro de tour affiché
-                $("#iteration").html(data.iteration);
-
-                //maj de sstats globales du tour
-                $("#items_done").html(data.stats.items.done);
-                $("#items_total").html(data.stats.items.total);
-                $("#items_percentage").html(data.stats.items.percentage);
-                $("#fields_done").html(data.stats.fields.done);
-                $("#fields_total").html(data.stats.fields.total);
-
-                var fieldstats = data.stats.fields_stats;
-
-                console.log(fieldstats[1]);
-//
-                for(var field_id in fieldstats ){
-
-                    var field = fieldstats[field_id];
-
-//                    console.log(field);
-//
-//                    console.log("#" + field_id + "-items_percentage");
-//
-//                    $("#" + field_id + "-items_global").html(field.items_global);
-//                    console.log(field.items_global);
-//                    $("#" + field_id + "-items_done").html(field.items_done);
-//                    console.log(field.items_done);
-                    $("#" + field_id + "-items_percentage").html(field.percentage);
-                    var done = field.percentage;
-                    var undone = 100 - done;
-                    var newData = generatePieData(done, undone);
-                    pie_charts[field_id].dataProvider = newData;
-                    pie_charts[field_id].validateData();
-//                    console.log(field.percentage);
-                }
-
-//                generatePieParams(fieldstats);
-            });
-
-        }
-
-        function generatePieCharts(stats){
-
-            var charts = [];
-
-            for(var id in stats){
-
-                var field = stats[id];
-                console.log(field);
-
-                var percentage_done = field.percentage;
-                var percentage_undone = 100 - percentage_done;
-
-                var params = generatePieParams(percentage_done, percentage_undone);
-
-                var html_id = "piechart-field-" + id;
-
-                $("#"+html_id).html("");
-                var chart_pie = AmCharts.makeChart(html_id, params);
-
-                chart_pie.validateData();
-
-                charts[id] = chart_pie;
-
-            }
-
-            return charts;
-
-        }
-
-        function generatePieParams(done, undone){
-
-         var pie_params =    {
-
-                "type": "pie",
-                    "balloonText": " <b>[[title]]</b><br>([[percents]]%)</span>",
-                    "sequencedAnimation": false,
-                    "labelText": "",
-                    "titleField": "label",
-                    "valueField": "percent",
-                    "colorField": "color",
-                    "fontFamily": "Arial",
-                    "fontSize": 12,
-                    "dataProvider": generatePieData(done, undone)
-            };
-
-            return pie_params;
-
-        }
-
-        function generatePieData(done, undone){
-            return [
-                {
-                    "label": "A Finir",
-                    "percent": undone,
-                    "color": "#FF0000"
-                },
-                {
-                    "label": "Terminés",
-                    "percent": done,
-                    "color" : "#00FF00"
-                }
-            ];
-        }
+    }
 
 
-    </script>
+
+</script>
 
 
-    {#    ON POSE UNE DATATABLE SUR LA LISTE#}
-
-    {#<script type="text/javascript">#}
 
 
-    {#</script>#}
 
 
 

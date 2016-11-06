@@ -23,7 +23,7 @@
                             {%  set mkb = "false" %}
                             <li><a class="darkbar" href="{{ path('stats_avancement', {'workset_id' : 1, 'mikbook' : mkb }) }}" tabindex="-1">Avancement</a></li>
                             <li class="divider darkbar"></li>
-                            <li><a class="darkbar" href="#" tabindex="-1">Globales</a></li>
+                            <li><a class="darkbar" href="{{ path('stats_tour', {'workset_id' : 1}) }}" tabindex="-1">Tours</a></li>
                             <li class="divider darkbar"></li>
                             <li><a class="darkbar" href="#" tabindex="-1">Cas</a></li>
                         </ul>

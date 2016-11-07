@@ -38,7 +38,12 @@
                 Matieres : <span id="fields_done">{{ stats.fields.done }}</span>/<span id="fields_total">{{ stats.fields.total }}</span>
             </div>
             <div class="col-xs-5">
-                <i>// TODO : Barre de %progression à <span id="items_percentage">{{ stats.items.percentage }}</span>%</i>
+                <div class="loader-container ">
+                    <div class="progression">
+
+                    </div>
+                </div>
+                {#<i>// TODO : Barre de %progression à <span id="items_percentage">{{ stats.items.percentage }}</span>%</i>#}
             </div>
         </div>
         <hr>
@@ -109,10 +114,12 @@
 
             var field = stats[id];
 
+            console.log(field);
+
             var percentage_done = field.percentage;
             var percentage_undone = 100 - percentage_done;
 
-            var params = generatePieParams(percentage_done, percentage_undone);
+            var params = generatePieParams(percentage_done, percentage_undone, field.color);
 
             var html_id = "piechart-field-" + id;
 
@@ -131,7 +138,9 @@
 
 
     //génère l'objet de configuration du PIE CHART
-    function generatePieParams(done, undone){
+    function generatePieParams(done, undone, color){
+
+        console.log("color : " + color);
 
         var pie_params =    {
 
@@ -144,7 +153,7 @@
             "colorField": "color",
             "fontFamily": "Arial",
             "fontSize": 12,
-            "dataProvider": generatePieData(done, undone)
+            "dataProvider": generatePieData(done, undone, color)
         };
 
         return pie_params;
@@ -152,17 +161,17 @@
     }
 
     //genère la partie DATA de la configuration du graphe
-    function generatePieData(done, undone){
+    function generatePieData(done, undone, color){
         return [
             {
                 "label": "A Finir",
                 "percent": undone,
-                "color": "#FF0000"
+                "color": color
             },
             {
                 "label": "Terminés",
                 "percent": done,
-                "color" : "#00FF00"
+                "color" : "#333333"
             }
         ];
     }
@@ -216,7 +225,7 @@
                 var done = field.percentage;
                 var undone = 100 - done;
                 //génération des nouvelles données du graphe
-                var newData = generatePieData(done, undone);
+                var newData = generatePieData(done, undone, field.color);
                 //maj du graphe avec les nouvelles données
                 pie_charts[field_id].dataProvider = newData;
                 pie_charts[field_id].validateData();

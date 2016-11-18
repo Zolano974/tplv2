@@ -3,6 +3,7 @@
 namespace Zolano\FluxinBundle\Repository;
 
 
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Zolano\FluxinBundle\Adapter\InfluxAdapter;
 use Oft\Mvc\Application;
 use Oft\Db\EntityQueryBuilder;
@@ -61,7 +62,14 @@ class InfluxRepository{
 
 //        dump($this->config);die;
 
-        $this->influxAdapter = new InfluxAdapter($this->config);
+        try{
+
+            $this->influxAdapter = new InfluxAdapter($this->config);
+        }
+        catch(Exception $e){
+            dump("zob");
+            throw $e;
+        }
     }
 
     /**
@@ -80,9 +88,15 @@ class InfluxRepository{
      */
     public function selectQueryFromDatabase($database, $query){
 
-        $this->influxAdapter->setDataBase($database);
+        try{
 
-        return $this->query($query);
+            $this->influxAdapter->setDataBase($database);
+
+            return $this->query($query);
+        }
+        catch(Exception $e){
+            throw $e;
+        }
     }
 
 

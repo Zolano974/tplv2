@@ -3,6 +3,7 @@
 namespace FirstBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FirstBundle\Repository\StatsRepository;
@@ -17,6 +18,8 @@ class StatsController extends Controller {
 
 
     public function curveAction($workset_id, $mikbook){
+
+//        dump("zob");die;
 
         $user_id = 1;
 
@@ -35,9 +38,17 @@ class StatsController extends Controller {
             ->getManager()
             ->getRepository('FirstBundle:Item');
 
-        $data_done = $itemDAO->loadWorksetData($user_id, $workset, $begin_date, $end_date);
+        try{
 
-        $data_mkb = $itemDAO->loadFieldsData($user_id, $workset->getId(), array(null), $begin_date, $end_date, true);
+
+            $data_done = $itemDAO->loadWorksetData($user_id, $workset, $begin_date, $end_date);
+
+            $data_mkb = $itemDAO->loadFieldsData($user_id, $workset->getId(), array(null), $begin_date, $end_date, true);
+        }
+        catch(Exception $e){
+            dump($e->getMessage());
+        }
+
 
 //        dump($data_done);die;
 

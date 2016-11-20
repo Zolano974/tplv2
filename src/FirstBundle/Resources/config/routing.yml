@@ -133,6 +133,10 @@ reminder_edit:
     path:    /reminder/{id}/edit
     defaults: { _controller: FirstBundle:Reminder:edit }
 
+reminder_set_text:
+    path:    /reminder/set/text/{workset_id}
+    defaults: { _controller: FirstBundle:Reminder:setText }
+
 reminder_delete:
     path:    /reminder/{id}/delete
     defaults: { _controller: FirstBundle:Reminder:delete }

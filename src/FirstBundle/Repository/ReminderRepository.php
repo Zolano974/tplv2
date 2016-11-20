@@ -55,4 +55,15 @@ class ReminderRepository extends EntityRepository
         return $matrix;
 
     }
+
+    public function fetchOneInMatrix($user_id, $workset_id, $x, $y){
+
+        if(($x != "A" && $x != "B" && $x != "C")||($y < 1 || $y > 4)){
+            return null;
+        }
+        else{
+            return $this->findBy(array('userId' => $user_id, 'worksetId' => $workset_id, 'xCoord' => $x, 'yCoord' => $y));
+        }
+
+    }
 }

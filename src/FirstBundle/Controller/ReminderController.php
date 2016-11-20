@@ -5,7 +5,7 @@ namespace FirstBundle\Controller;
 use FirstBundle\Entity\Reminder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\Response;
 /**
  * Reminder controller.
  *
@@ -28,6 +28,7 @@ class ReminderController extends Controller
 //        dump($reminders);die;
 
         return $this->render('FirstBundle:Reminder:display.html.twig', array(
+            'workset_id'=> $workset_id,
             'matrix'    => $reminders,
             'xcoords'   => array('A','B','C'),
             'ycoords'   => array(1,2,3,4),
@@ -110,6 +111,51 @@ class ReminderController extends Controller
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    public function setTextAction($workset_id){
+
+        $user_id = 1;
+
+        $request = Request::createFromGlobals();
+
+        $message = "not an ajax requet as expected";
+
+        if($request->isXmlHttpRequest()){
+
+            $x = $request->request->get('x');
+            $y = $request->request->get('y');
+            $text = $request->request->get('text');
+
+            $em = $this->getDoctrine()->getManager();
+
+
+            $reminders =  $em->getRepository('FirstBundle:Reminder')->fetchOneInMatrix($user_id, $workset_id, $x, $y);
+
+            if(isset($reminders[0])){
+                $reminder = $reminders[0];
+
+            $reminder->setText($text);
+
+
+
+            $em->persist($reminder);
+            $em->flush();
+
+            $message = "text changed";
+            }
+
+        }
+
+        $json_data= json_encode(array(
+            'msg'   => $message,
+        ));
+
+        $response = new Response($json_data);
+
+        $response->headers->set('Content-Type','application/json');
+
+        return $response; //on utilise pas de template généralement en ajax
     }
 
     /**

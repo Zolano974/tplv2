@@ -113,3 +113,30 @@ stats_avancement:
 stats_tour:
     path:    /stats/tour/{workset_id}
     defaults: { _controller: FirstBundle:Stats:tour, mikbook: false }
+
+
+#Reminders
+
+reminders_display:
+    path:    /reminder/{workset_id}
+    defaults: { _controller: FirstBundle:Reminder:display }
+
+reminder_index:
+    path:    /reminder
+    defaults: { _controller: FirstBundle:Reminder:index }
+
+reminder_show:
+    path:    /reminder/{id}/show
+    defaults: { _controller: FirstBundle:Reminder:show }
+
+reminder_edit:
+    path:    /reminder/{id}/edit
+    defaults: { _controller: FirstBundle:Reminder:edit }
+
+reminder_delete:
+    path:    /reminder/{id}/delete
+    defaults: { _controller: FirstBundle:Reminder:delete }
+
+reminder_new:
+    path:    /reminder/new
+    defaults: { _controller: FirstBundle:Reminder:new }

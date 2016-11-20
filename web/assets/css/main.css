@@ -218,9 +218,14 @@
 .reminder-textarea{
     width: 100%;
     height:100%;
-    min-height:125px;
-    max-height:125px;
+    min-height:160px;
+    /*max-height:135px;*/
+    border-radius: 10px 10px 10px 10px;
+
+    /*background-color: #ccd232;*/
+    background-image: url("../img/note-background.jpg");
 }
+
 
 .bookmark{
 
@@ -228,53 +233,32 @@
 
 .bookmark-filled{
     padding: 10px;
-    /*margin-left: 3px;*/
-    /*margin-right: 3px;*/
-    /*margin-bottom: 4px;*/
-    /*margin-top: 4px;*/
 
-    border-radius: 10px 10px 10px 10px;
+    box-shadow: 5px 5px 3px #888888;
     -moz-border-radius: 10px 10px 10px 10px;
     -webkit-border-radius: 10px 10px 10px 10px;
+    background-image: url("../img/note.png");
 
-    border: 1px solid black;
-    background-color: #77d5f7;
+    /*overflow-y: scroll;*/
+
     width: 100%;
     min-height: 150px;
-    max-height: 150px;
+    /*max-height: 150px;*/
 
     cursor: pointer;
 }
 
 .bookmark-shadow{
-    background-color: #D9e9fc;
+    box-shadow: 8px 8px 4px #888888;
+
+    /*background-color: #D9e9fc;*/
     border-radius: 10px 10px 10px 10px;
     -moz-border-radius: 10px 10px 10px 10px;
     -webkit-border-radius: 10px 10px 10px 10px;
-    border: 2px dashed #381138;
+    border: 1px dashed #999999;
 
     min-height: 150px;
-    max-height: 150px;
+    /*max-height: 150px;*/
     cursor: pointer;
 }
 
-/*.triangle-right{*/
-    /*width: 0;*/
-    /*height: 0;*/
-    /*border-style: solid;*/
-    /*border-width: 10px 0 10px 10px;*/
-    /*border-color: transparent transparent transparent #EEE;*/
-    /*margin-right: 5px;*/
-    /*margin-left:0px;*/
-/*}*/
-
-/*.rectangle{*/
-    /*background-color: #EEE;*/
-    /*width: 50px;*/
-    /*height:20px;*/
-    /*border-width: 1px;*/
-    /*border-color : green blue red violet;*/
-    /*margin-right: 0px;*/
-    /*margin-left:5px;*/
-
-/*}*/

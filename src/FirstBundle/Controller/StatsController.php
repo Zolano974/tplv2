@@ -94,7 +94,7 @@ class StatsController extends Controller {
             ->fetchOneWithFields($workset_id);
 
 
-        $statsDAO = new StatsRepository($this->getDoctrine()->getEntityManager());
+        $statsDAO = new StatsRepository($this->getDoctrine()->getManager());
 
         $last_iteration = $tourDAO->getLastTour($workset_id, $user_id);
 

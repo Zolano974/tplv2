@@ -13,7 +13,7 @@
             {% for x in xcoords %}
                 {% for y in ycoords %}
                     {% set reminder = matrix[x][y] %}
-                    <div class="col-md-4 reminder">
+                    <div class="col-xs-4 reminder">
 
                         {% set css_class = " bookmark bookmark-shadow" %}
                         {% set placeholder = "Ecrire une nouvelle note" %}
@@ -26,27 +26,29 @@
                         {% endif %}
 
                         <div id="bookmark-{{ x }}-{{ y }}" class="{{ css_class }}" >
-                            {#<div class="row">#}
-                                {#<div class="col-xs-1 col-md-offset-9">#}
-                                    {#<span clas="glyphicon glyphicon-eye-open"></span>#}
+                            {% if shadow == false %}
+
+                                {#<div class="row">#}
+                                    {#<div class="col-xs-1 col-md-offset-9">#}
+                                        {#<span class="glyphicon glyphicon-eye-open"></span>#}
+                                    {#</div>#}
+                                    {#<div class="col-xs-1 ">#}
+                                        {#<span class="glyphicon glyphicon-remove"></span>#}
+                                    {#</div>#}
                                 {#</div>#}
-                                {#<div class="col-xs-1 col-md-offset-9">#}
-                                    {#<span clas="glyphicon glyphicon-trash"></span>#}
+                            {% endif %}
+                            {#<div class="row">#}
+                                {#<div class="col-xs-12">#}
+
+                                        <p >
+                                            {% if shadow == false %}
+                                                {{ reminder.text | raw }}
+                                            {% endif %}
+                                        </p>
+
+                                    <textarea id="text-{{ x }}-{{ y }}" text="" class="reminder-textarea" style="display:none"></textarea>
                                 {#</div>#}
                             {#</div>#}
-
-                            {% if shadow %}
-                                <p >
-
-                                </p>
-                            {% else %}
-
-                                <p >
-                                    {{ reminder.text | raw }}
-                                </p>
-                            {% endif %}
-
-                            <textarea id="text-{{ x }}-{{ y }}" text="" class="reminder-textarea" style="display:none"></textarea>
                         </div>
                     </div>
                 {% endfor %}
@@ -122,6 +124,7 @@
             $("#"+html_id).find('p').hide();
             $("#"+html_id).find('textarea').val(br2nl(text).trim());
             $("#"+html_id).find('textarea').show();
+            $("#"+html_id).find('textarea').focus();
         };
 
         /**
@@ -134,21 +137,17 @@
             var text =  $("#"+html_id).find('textarea').val();
             if(text === undefined || text === ""){
                 text = "";
-                console.log('display change class to shadow');
+                //on ajutse la classe en fonction
                 $("#"+html_id).attr('class','bookmark bookmark-shadow');
             }
             else{
                 $("#"+html_id).attr('class','bookmark bookmark-filled');
             }
-            console.log(text);
+//            console.log(text);
             $("#"+html_id).find('textarea').hide();
             $("#"+html_id).find('p').html(nl2br(text));
             $("#"+html_id).find('p').show();
         };
-
-
-
-
 
 
         $(document).ready(function(){
@@ -170,7 +169,7 @@
 
             //quand un reminder existant est clické
             $('.bookmark').on('click', function(e){
-
+                //on passe en mode edition
                 setWriteMode(this.id);
             });
 

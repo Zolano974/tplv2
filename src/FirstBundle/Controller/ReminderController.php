@@ -23,12 +23,14 @@ class ReminderController extends Controller
 
 //        $reminderDao->createReminderSet($user_id, $workset_id);
 
-        $rmlist = $reminderDao->findBy(array('userId' => $user_id, 'worksetId' => $workset_id));
+        $reminders = $reminderDao->fetchAllInMatrix($user_id, $workset_id);
 
-        dump($rmlist);die;
+//        dump($reminders);die;
 
         return $this->render('FirstBundle:Reminder:display.html.twig', array(
-            'reminders' => array(),
+            'matrix'    => $reminders,
+            'xcoords'   => array('A','B','C'),
+            'ycoords'   => array(1,2,3,4),
         ));
     }
 

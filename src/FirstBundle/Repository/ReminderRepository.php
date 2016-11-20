@@ -41,4 +41,18 @@ class ReminderRepository extends EntityRepository
         $em->flush();
 
     }
+
+    public function fetchAllInMatrix($user_id, $workset_id){
+
+        $list = $this->findBy(array('userId' => $user_id, 'worksetId' => $workset_id));
+
+        $matrix = array();
+
+        foreach($list as $reminder){
+            $matrix[$reminder->getXcoord()][$reminder->getYcoord()] = $reminder;
+        }
+
+        return $matrix;
+
+    }
 }

@@ -202,6 +202,14 @@
     background-color: #00aa00;
 }
 
+.reminder{
+    min-height: 80px;
+    border: 1px solid black;
+    /*margin: 2px;*/
+    /*padding : 2px;*/
+
+}
+
 /*.triangle-right{*/
     /*width: 0;*/
     /*height: 0;*/

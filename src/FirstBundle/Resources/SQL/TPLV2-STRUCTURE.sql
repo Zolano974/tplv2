@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 06, 2016 at 02:19 PM
--- Server version: 10.1.18-MariaDB
--- PHP Version: 7.0.12
+-- Generation Time: Nov 20, 2016 at 06:12 PM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 7.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -31,7 +31,7 @@ CREATE TABLE `field` (
   `workset_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `color` varchar(7) COLLATE utf8_unicode_ci NOT NULL,
-  `order_custom` int(11) DEFAULT '1'
+  `order_custom` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -51,12 +51,10 @@ CREATE TABLE `fos_user` (
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `last_login` datetime DEFAULT NULL,
   `locked` tinyint(1) NOT NULL,
-  `expired` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL,
   `confirmation_token` varchar(180) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password_requested_at` datetime DEFAULT NULL,
   `roles` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:array)',
-  `credentials_expired` tinyint(1) NOT NULL,
   `credentials_expire_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -142,6 +140,21 @@ CREATE TABLE `link_tour_item` (
   `user_id` int(11) NOT NULL COMMENT 'FK references User(id)',
   `done` int(1) NOT NULL COMMENT '0 or 1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reminder`
+--
+
+CREATE TABLE `reminder` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `workset_id` int(11) NOT NULL,
+  `xcoord` varchar(1) COLLATE utf8_unicode_ci NOT NULL,
+  `ycoord` int(11) NOT NULL,
+  `text` varchar(2000) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -318,6 +331,12 @@ ALTER TABLE `link_tour_item`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `reminder`
+--
+ALTER TABLE `reminder`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tour`
 --
 ALTER TABLE `tour`
@@ -353,7 +372,7 @@ ALTER TABLE `fos_user`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `item_mikbook`
 --
@@ -374,6 +393,11 @@ ALTER TABLE `link_tour_field`
 --
 ALTER TABLE `link_tour_item`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+--
+-- AUTO_INCREMENT for table `reminder`
+--
+ALTER TABLE `reminder`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 --
 -- AUTO_INCREMENT for table `tour`
 --

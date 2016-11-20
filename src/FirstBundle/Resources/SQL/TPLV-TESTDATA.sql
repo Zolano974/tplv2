@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 06, 2016 at 02:19 PM
--- Server version: 10.1.18-MariaDB
--- PHP Version: 7.0.12
+-- Generation Time: Nov 20, 2016 at 06:14 PM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 7.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -25,9 +25,9 @@ SET time_zone = "+00:00";
 --
 
 INSERT INTO `field` (`id`, `workset_id`, `name`, `color`, `order_custom`) VALUES
-(1, 1, 'Zobologie', '#9f07c5', NULL),
-(2, 1, 'Neurologie', '#89a0eb', NULL),
-(3, 1, 'Conniologie', '#d9e9b4', NULL);
+(1, 1, 'Zobologie', '#9f07c5', 0),
+(2, 1, 'Neurologie', '#89a0eb', 0),
+(3, 1, 'Conniologie', '#d9e9b4', 0);
 
 --
 -- Dumping data for table `item`
@@ -97,7 +97,7 @@ INSERT INTO `link_tour_field` (`id`, `tour_id`, `field_id`, `user_id`, `done`) V
 (2, 1, 2, 1, 1),
 (3, 1, 3, 1, 0),
 (4, 2, 1, 1, 0),
-(5, 2, 2, 1, 0),
+(5, 2, 2, 1, 1),
 (6, 2, 3, 1, 0),
 (7, 3, 1, 1, 0),
 (8, 3, 2, 1, 0),
@@ -118,13 +118,13 @@ INSERT INTO `link_tour_item` (`id`, `tour_id`, `item_id`, `user_id`, `done`) VAL
 (8, 1, 2, 1, 0),
 (9, 1, 3, 1, 0),
 (10, 2, 4, 1, 0),
-(11, 2, 5, 1, 0),
-(12, 2, 6, 1, 0),
-(13, 2, 9, 1, 0),
-(14, 2, 7, 1, 0),
-(15, 2, 8, 1, 0),
-(16, 2, 1, 1, 0),
-(17, 2, 2, 1, 0),
+(11, 2, 5, 1, 1),
+(12, 2, 6, 1, 1),
+(13, 2, 9, 1, 1),
+(14, 2, 7, 1, 1),
+(15, 2, 8, 1, 1),
+(16, 2, 1, 1, 1),
+(17, 2, 2, 1, 1),
 (18, 2, 3, 1, 0),
 (19, 3, 4, 1, 0),
 (20, 3, 5, 1, 0),
@@ -135,6 +135,24 @@ INSERT INTO `link_tour_item` (`id`, `tour_id`, `item_id`, `user_id`, `done`) VAL
 (25, 3, 1, 1, 0),
 (26, 3, 2, 1, 0),
 (27, 3, 3, 1, 0);
+
+--
+-- Dumping data for table `reminder`
+--
+
+INSERT INTO `reminder` (`id`, `user_id`, `workset_id`, `xcoord`, `ycoord`, `text`) VALUES
+(15, 1, 1, 'A', 1, 'Te faire des notes !<br><br>:)<br><br>&lt;3 &lt;3'),
+(16, 1, 1, 'A', 2, ''),
+(17, 1, 1, 'A', 3, 'le VIH c\'est pr les pd !!'),
+(18, 1, 1, 'A', 4, ''),
+(19, 1, 1, 'B', 1, ''),
+(20, 1, 1, 'B', 2, ''),
+(21, 1, 1, 'B', 3, ''),
+(22, 1, 1, 'B', 4, 'Pour ma Chérie :) &lt;3'),
+(23, 1, 1, 'C', 1, ''),
+(24, 1, 1, 'C', 2, 'Pied Gauche'),
+(25, 1, 1, 'C', 3, ''),
+(26, 1, 1, 'C', 4, 'Pied Droit');
 
 --
 -- Dumping data for table `tour`

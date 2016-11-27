@@ -26,6 +26,7 @@
             {% endfor %}
         </div>
 
+
         {# Affichage des stats globales du tour#}
         <div class="row">
             <div class="col-xs-5">
@@ -39,11 +40,13 @@
             </div>
             <div class="col-xs-5">
                 <div class="loader-container ">
-                    <div class="progression">
-
-                    </div>
+                    {#<div class="progression">#}
+                        <progress id="global_progress" max="{{ stats.items.total }}" value="{{ stats.items.done }}" class="progress-bar-custom"></progress>
+                    {#</div>#}
                 </div>
                 {#<i>// TODO : Barre de %progression à <span id="items_percentage">{{ stats.items.percentage }}</span>%</i>#}
+
+
             </div>
         </div>
         <hr>
@@ -198,12 +201,12 @@
 
             old_iteration = iteration;
 
-
-
             console.log("#breadcrumb-tour-"+data.iteration);
 
             //maj du numéro de tour affiché
             $("#iteration").html(data.iteration);
+
+            console.log(data.stats);
 
             //maj de sstats globales du tour
             //ITEMS
@@ -213,6 +216,10 @@
             //FIELDS
             $("#fields_done").html(data.stats.fields.done);
             $("#fields_total").html(data.stats.fields.total);
+            //PROGRESS BAR
+            $("#global_progress").attr('max', data.stats.items.total);
+            $("#global_progress").attr('value', data.stats.items.done);
+
 
             var fieldstats = data.stats.fields_stats;
 

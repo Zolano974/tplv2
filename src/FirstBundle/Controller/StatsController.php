@@ -108,6 +108,8 @@ class StatsController extends Controller {
 
         $stats = $statsDAO->getWorksetGlobal($workset, $iteration, $user_id);
 
+//        dump($stats);die;
+
         //si c'est un appel Ajax
         if($request->isXmlHttpRequest()){
 

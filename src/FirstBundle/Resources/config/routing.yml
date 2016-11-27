@@ -114,6 +114,9 @@ stats_tour:
     path:    /stats/tour/{workset_id}
     defaults: { _controller: FirstBundle:Stats:tour, mikbook: false }
 
+stats_notes:
+    path:    /stats/note/{workset_id}
+    defaults: { _controller: FirstBundle:Stats:note, mikbook: false }
 
 #Reminders
 

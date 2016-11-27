@@ -137,10 +137,49 @@ class StatsController extends Controller {
         }
 
 
-
     }
 
 
+    public function noteAction($workset_id){
+
+        $user_id = 1;
+
+        $request = Request::createFromGlobals();
+    }
+
+    //fonction dédiée Ajax, pour le mikbookage des items
+    public function marknoteAction() {
+
+        $user_id = 1;
+
+        $request = Request::createFromGlobals();
+
+        if ($request->isXmlHttpRequest()) {
+
+            $type = $request->request->get('type', null);
+
+            $note = $request->request->get('note', null);
+
+            $workset_id = $request->request->get('workset_id', null);
+
+            $field_id = $request->request->get('field_id', null);
+
+            $itemDAO = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('FirstBundle:Item');
+
+            //trigger une insertion influxDB
+            $influx_output = $itemDAO->markInfluxDBNote($type, $user_id, $workset_id, $field_id, $note);
+
+            $json_data = json_encode($influx_output);
+
+            $response = new Response($json_data);
+
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response; //on utilise pas de template généralement en ajax
+        }
+    }
 
     public function testAction() {
 

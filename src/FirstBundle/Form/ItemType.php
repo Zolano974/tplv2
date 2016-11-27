@@ -30,7 +30,7 @@ class ItemType extends AbstractType
                                             'expanded'      => false,
                                             //pour personnaliser la liste
 //                                            'querybuilder'  => function(FirstBundle\Repository\FieldRepository $r){
-//                                                return $r->getSelectListTest1();
+//                                                return $r->getCustomList();
 //                                            },                
             ));
         ;

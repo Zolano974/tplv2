@@ -364,6 +364,40 @@ class ItemRepository extends EntityRepository
         return $influx->mark($mark_array);
     }
 
+    /**
+     * Ecrit une note dans influsDB
+     *
+     * @param Type              $type           Type of the note ( conf ou annale )
+     * @param UserId            $user_id        The bID of the user to be written
+     * @param WorksetId         $workset_id     The bID of the user to be written
+     * @param FieldId           $field_id       The bID of the field to be written
+     * @param Mkb               $mkb            Wether the item has benn mikbooked TRUE or done FALSE
+     */
+    public function markInfluxDBNote($type, $user_id, $workset_id, $field_id, $note){
+
+        $mark_array = [
+            "tags" => [
+                "type"          => "$type",
+                "field_id"      => "$field_id",
+                "workset_id"    => "$workset_id",
+                "user_id"       => "$user_id",
+            ],
+            "points" => [
+                [
+                    "measurement" => "notes",
+                    "fields"    => [
+                        "note" => $note,
+                    ]
+                ],
+            ],
+        ];
+
+
+        $influx = $this->getInfluxRepository();
+
+        return $influx->mark($mark_array);
+    }
+
     /** Fonction qui vise à rajouter un champs COLOR pour les series avant qu'elles soient provessées pour créerle graphe AmCharts
      * @param $series
      */

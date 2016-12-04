@@ -230,6 +230,17 @@ class StatsRepository{
 
         return $max_it;
     }
+
+    /** Instancie un Influxrepository
+     *
+     * @return InfluxRepository
+     */
+    private function getInfluxRepository(){
+
+        return  new InfluxRepository($this->getEntityManager());
+
+
+    }
 }
 
 

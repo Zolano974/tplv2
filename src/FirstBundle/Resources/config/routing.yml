@@ -118,6 +118,10 @@ stats_notes:
     path:    /stats/note/{workset_id}
     defaults: { _controller: FirstBundle:Stats:note, mikbook: false }
 
+mark_note:
+    path:    /stats/marknote/{workset_id}
+    defaults: { _controller: FirstBundle:Stats:marknote }
+
 #Reminders
 
 reminders_display:

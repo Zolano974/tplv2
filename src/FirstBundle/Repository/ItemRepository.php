@@ -392,6 +392,8 @@ class ItemRepository extends EntityRepository
             ],
         ];
 
+//        print_r($mark_array);die;
+
 
         $influx = $this->getInfluxRepository();
 

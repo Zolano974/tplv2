@@ -167,14 +167,15 @@
     function generatePieData(done, undone, color){
         return [
             {
-                "label": "A Finir",
-                "percent": undone,
-                "color": "#cccccc"
-            },
-            {
                 "label": "Terminés",
                 "percent": done,
                 "color" : color
+            }
+            ,
+            {
+                "label": "A Finir",
+                "percent": undone,
+                "color": "#ffffff"
             }
         ];
     }

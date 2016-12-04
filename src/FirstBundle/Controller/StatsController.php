@@ -2,6 +2,7 @@
 
 namespace FirstBundle\Controller;
 
+use FirstBundle\Form\NoteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -141,16 +142,38 @@ class StatsController extends Controller {
 
     }
 
+    public function notestatsAction($workset_id){
+
+        $user_id = 1;
+
+        $request = Request::createFromGlobals();
+
+        $begin_date = $request->request->get('begin_date', null);
+        $end_date = $request->request->get('end_date', null);
+
+    }
+
 
     public function noteAction($workset_id){
 
         $user_id = 1;
 
         $request = Request::createFromGlobals();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fieldDAO = $em->getRepository('FirstBundle:Field');
+
+        $fields = $fieldDAO->fetchAllByWorksetId($workset_id);
+
+        return $this->render('FirstBundle:Stats:note.html.twig', array(
+            'fields'        => $fields,
+            'workset_id'    => $workset_id,
+        ));
     }
 
     //fonction dédiée Ajax, pour le mikbookage des items
-    public function marknoteAction() {
+    public function marknoteAction($workset_id) {
 
         $user_id = 1;
 
@@ -158,11 +181,11 @@ class StatsController extends Controller {
 
         if ($request->isXmlHttpRequest()) {
 
-            $type = $request->request->get('type', null);
+            $type = $request->request->get('type', 'cas');
 
             $note = $request->request->get('note', null);
 
-            $workset_id = $request->request->get('workset_id', null);
+//            $workset_id = $request->request->get('workset_id', null);
 
             $field_id = $request->request->get('field_id', null);
 

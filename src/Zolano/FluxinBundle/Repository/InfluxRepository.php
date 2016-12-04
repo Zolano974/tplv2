@@ -49,10 +49,17 @@ class InfluxRepository{
     public function __construct(EntityManager $em, Array $config = array()){
   
 
+//        $this->config = (count($config)) ? $config : array(
+//            'idb_user'      => 'zolano',
+//            'idb_pwd'       => 'zolano',
+//            'idb_host'      => 'localhost',
+//            'idb_dbname'    => 'items',
+//        );
+
         $this->config = (count($config)) ? $config : array(
             'idb_user'      => 'zolano',
             'idb_pwd'       => 'zolano',
-            'idb_host'      => 'localhost',
+            'idb_host'      => '137.74.197.5',
             'idb_dbname'    => 'items',
         );
 

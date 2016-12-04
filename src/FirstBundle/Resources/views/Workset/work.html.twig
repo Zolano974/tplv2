@@ -89,11 +89,11 @@
                             {% endif %}
                             <tr>
                                 <td id="f-{{ field_id }}_i-{{ item.id }}" class="col-md-12 check_item {{ class }} subfield-{{ field_id }}" style="display:none">
-                                    <span class="col-md-8 item_body">
+                                    <span class="col-md-8 col-xs-8 item_body">
                                         #{{ item.number }} &nbsp;&nbsp;
                                         {{item.name}}
                                     </span>
-                                    <span class="col-md-2">
+                                    <span class="col-md-2 col-xs-2">
                                         {% set html_id = "i-" ~  item.id ~ "_mkb_f-" ~  field_id  %}
                                         <span {{ book }} id="{{ html_id }}"
                                                          class="glyphicon glyphicon-book pointer"
